@@ -1,31 +1,35 @@
-<?php
-error_reporting(E_ALL);
-ini_set('display_errors', '1');
-?>
 <!doctype html>
 <html lang="en">
 <head>
 
   <meta charset="utf-8">
-  <title>Content Tabs Tests</title>
+  <title>Featured Video Component Tests</title>
   <link rel="stylesheet" href="css/style.css" media="screen" />
-  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
   <script src="../featuredVideo.js"></script>
   <script>
+
+
 
     $(document).on('ready', function() {
 
       // init plugin
       $('.featuredVideo').eq(0).featuredVideo({
-        showPlaylist: true,
+        showPlaylist: false,
         showPlaylistTooltips: true,
-        autoplayFirstVideo: true
-      });
-      $('.featuredVideo').eq(1).featuredVideo({
-        showPlaylist: true,
-        showPlaylistTooltips: false,
         autoplayFirstVideo: false
       });
+      // $('.featuredVideo').eq(1).featuredVideo({
+      //   showPlaylist: true,
+      //   showPlaylistTooltips: false,
+      //   autoplayFirstVideo: false
+      // });
+      // $('.featuredVideo').eq(2).featuredVideo({
+      //   showPlaylist: false,
+      //   showPlaylistTooltips: false,
+      //   autoplayFirstVideo: false
+      // });
+      // $('.featuredVideo').eq(3).featuredVideo();
 
     });
 
@@ -37,22 +41,27 @@ ini_set('display_errors', '1');
 <div id="micrositeContainerInner">
 <div id="micrositeContainerCompress">
 
-  <div id="micrositeHeader">Header</div>
-
   <div id="micrositeContent">
 
     <div id="micrositeContentColumnFull">
 
-      <h2>For testing video player hash</h2>
+    <br /><br />
+
+      <h2>Test video player hash</h2>
       <ol>
       <li>
-        <a href="./index.html#videoId=2050214452001">
-        absolute link to a video on THIS page (works - video #3 loaded)
+        <a href="./index.html#videoId=2050140601001">
+        absolute link to a video on THIS page (works - video #2 loaded)
         </a>
       </li>
       <li>
         <a href="./index2.html#videoId=2050137981001">
-        absolute link to a video on ANOTHER page (works - last video loaded)
+        absolute link to a video on ANOTHER page (works - video #3 loaded)
+        </a>
+      </li>
+      <li>
+        <a href="./index.html#videoId=2050137982001">
+        a 2nd absolute link to a video on THIS page (does not work UNLESS page refreshed, but it's supposed to load video #6)
         </a>
       </li>
       <li>
@@ -63,14 +72,14 @@ ini_set('display_errors', '1');
       </ol>
       <br />
 
-      <h2>Featured Video w/ Autoplay first video and tooltips enabled</h2>
+      <h2>Featured Video w/ autoplay first video and tooltips enabled</h2>
 
        <!-- BEGIN: featured video component -->
       <div class="featuredVideo">
 
         <div class="featuredVideoPlayer">
 
-          <object id="featuredVideoPlayerBrightcove" class="BrightcoveExperience">
+          <object id="featuredVideoPlayerBrightcove1" class="BrightcoveExperience">
             <param name="bgcolor" value="#000000" />
             <param name="wmode" value="opaque" />
             <param name="width" value="640" />
@@ -81,8 +90,8 @@ ini_set('display_errors', '1');
             <param name="isUI" value="true" />
             <param name="dynamicStreaming" value="true" />
             <param name="includeAPI" value="true" />
-            <param name="templateLoadHandler" value="bcPlayerLoaded" />
-            <param name="templateReadyHandler" value="bcPlayerReady" />
+            <param name="templateLoadHandler" value="brightcovePlayerLoaded" />
+            <param name="templateReadyHandler" value="brightcovePlayerReady" />
           </object>
 
         </div>
@@ -97,7 +106,7 @@ ini_set('display_errors', '1');
               <img src="http://cdn.ttgtmedia.com/microsites/hpenterpriseservicessolutionscentre/images/bc_thumb_the_future_of_your_business_with_hp_cloud_services.jpg" alt="">
               <div class="mediaBlockContent">
                 <h4 class="featuredVideoTitle">The future of your business with HP Cloud Services</h4>
-                <p class="featuredVideoSummary">a three line video summary to make that jerk Paul happy (hope he can't read)</p>
+                <p class="featuredVideoSummary">a summary that is a single line (~40 chars)</p>
               </div>
             </div>
           </li>
@@ -106,7 +115,7 @@ ini_set('display_errors', '1');
               <img src="http://cdn.ttgtmedia.com/microsites/hpenterpriseservicessolutionscentre/images/bc_thumb_hp_cloud_platform_gives_elders_flexibility.jpg" alt="">
               <div class="mediaBlockContent">
                 <h4 class="featuredVideoTitle">HP's Cloud Platform gives Elders flexibility</h4>
-                <p class="featuredVideoSummary">a three line video summary to make that jerk Paul happy (hope he can't read)</p>
+                <p class="featuredVideoSummary">a video summary that consists of two lines of two of two lines in the tooltip box (~80 chars)</p>
               </div>
             </div>
           </li>
@@ -115,7 +124,7 @@ ini_set('display_errors', '1');
               <img src="http://cdn.ttgtmedia.com/microsites/hpenterpriseservicessolutionscentre/images/bc_thumb_hp_key_strength_is_infrastructure.jpg" alt="">
               <div class="mediaBlockContent">
                 <h4 class="featuredVideoTitle">HP's Key Strength is Infrastructure</h4>
-                <p class="featuredVideoSummary">a three line video summary to make that jerk Paul happy (hope he can't read)</p>
+                <p class="featuredVideoSummary">a three line video summary that goes on and on and on and on and on and on and on and on and on and on and on and on (~120 chars)</p>
               </div>
             </div>
           </li>
@@ -124,7 +133,7 @@ ini_set('display_errors', '1');
             <img src="http://cdn.ttgtmedia.com/microsites/hpenterpriseservicessolutionscentre/images/bc_thumb_security_solutions_are_critical.jpg" alt="">
               <div class="mediaBlockContent">
                 <h4 class="featuredVideoTitle">Security Solutions are critical</h4>
-                <p class="featuredVideoSummary">a three line video summary to make that jerk Paul happy (hope he can't read)</p>
+                <p class="featuredVideoSummary"><!-- missing video summary --></p>
               </div>
             </div>
           </li>
@@ -133,7 +142,7 @@ ini_set('display_errors', '1');
             <img src="http://cdn.ttgtmedia.com/microsites/hpenterpriseservicessolutionscentre/images/bc_thumb_the_official_opening_of_the_aurora_data_centre_in_australia.jpg" alt="">
               <div class="mediaBlockContent">
                 <h4 class="featuredVideoTitle">The Official Opening of the Aurora Data Centre in Australia</h4>
-                <p class="featuredVideoSummary">a three line video summary to make that jerk Paul happy (hope he can't read)</p>
+                <p class="featuredVideoSummary">a three line video summary that goes on and on and on and on and on and on and on and on and on and on and on and on (~120 chars)</p>
               </div>
             </div>
           </li>
@@ -142,34 +151,7 @@ ini_set('display_errors', '1');
             <img src="http://cdn.ttgtmedia.com/microsites/hpenterpriseservicessolutionscentre/images/bc_thumb_hp_enterprise_security_services_video.jpg" alt="">
               <div class="mediaBlockContent">
                 <h4 class="featuredVideoTitle">HP Enterprise Security Services</h4>
-                <p class="featuredVideoSummary">a three line video summary to make that jerk Paul happy (hope he can't read)</p>
-              </div>
-            </div>
-          </li>
-          <li data-video-id="2050141496001">
-            <div class="mediaBlock">
-            <img src="http://cdn.ttgtmedia.com/microsites/hpenterpriseservicessolutionscentre/images/bc_thumb_drive_growth_with_hp_bpo_services.jpg" alt="">
-              <div class="mediaBlockContent">
-                <h4 class="featuredVideoTitle">Drive growth with HP BPO Services - Kathy Garcia, Senior Vice-President</h4>
-                <p class="featuredVideoSummary">a three line video summary to make that jerk Paul happy (hope he can't read)</p>
-              </div>
-            </div>
-          </li>
-          <li data-video-id="2050140600001">
-            <div class="mediaBlock">
-            <img src="http://cdn.ttgtmedia.com/microsites/hpenterpriseservicessolutionscentre/images/bc_thumb_hp_finance_and_administration_overview.jpg" alt="">
-              <div class="mediaBlockContent">
-                <h4 class="featuredVideoTitle">HP Finance and Administration Overview</h4>
-                <p class="featuredVideoSummary">a three line video summary to make that jerk Paul happy (hope he can't read)</p>
-              </div>
-            </div>
-          </li>
-          <li data-video-id="2050137981001">
-            <div class="mediaBlock">
-            <img src="http://cdn.ttgtmedia.com/microsites/hpenterpriseservicessolutionscentre/images/bc_thumb_hp_social_crm_services_video.jpg" alt="">
-              <div class="mediaBlockContent">
-                <h4 class="featuredVideoTitle">HP Social CRM Services Video</h4>
-                <p class="featuredVideoSummary">a three line video summary to make that jerk Paul happy (hope he can't read)</p>
+                <p class="featuredVideoSummary">a three line video summary that goes on and on and on and on and on and on and on and on and on and on and on and on (~120 chars)</p>
               </div>
             </div>
           </li>
@@ -180,93 +162,9 @@ ini_set('display_errors', '1');
       </div>
       <!-- END: featured video component -->
 
-      <!-- BEGIN: featured video component -->
-      <div class="featuredVideo">
-
-        <div class="featuredVideoPlayer">
-
-          <object id="featuredVideoPlayerBrightcove2" class="BrightcoveExperience">
-            <param name="bgcolor" value="#000000" />
-            <param name="wmode" value="opaque" />
-            <param name="width" value="640" />
-            <param name="height" value="360" />
-            <param name="playerID" value="2045898185001" />
-            <param name="playerKey" value="AQ~~,AAAAAGL7FTI~,KqbVcw7NDYolTatfEGWnMVsFvGToVKp2" />
-            <param name="isVid" value="true" />
-            <param name="isUI" value="true" />
-            <param name="dynamicStreaming" value="true" />
-            <param name="includeAPI" value="true" />
-            <param name="templateLoadHandler" value="bcPlayerLoaded" />
-            <param name="templateReadyHandler" value="bcPlayerReady" />
-          </object>
-
-        </div>
-
-        <div class="featuredVideoPlaylist">
-
-          <h3 class="featuredVideoPlaylistHeader">Additional Videos</h3>
-
-          <ul>
-          <li data-video-id="2050140601001">
-            <div class="mediaBlock">
-              <img src="http://cdn.ttgtmedia.com/microsites/hpenterpriseservicessolutionscentre/images/bc_thumb_hp_cloud_platform_gives_elders_flexibility.jpg" alt="">
-              <div class="mediaBlockContent">
-                <h4 class="featuredVideoTitle">HP's Cloud Platform gives Elders flexibility</h4>
-                <p class="featuredVideoSummary">a three line video summary to make that jerk Paul happy (hope he can't read)</p>
-              </div>
-            </div>
-          </li>
-          <li data-video-id="2050141491001">
-            <div class="mediaBlock">
-              <img src="http://cdn.ttgtmedia.com/microsites/hpenterpriseservicessolutionscentre/images/bc_thumb_the_future_of_your_business_with_hp_cloud_services.jpg" alt="">
-              <div class="mediaBlockContent">
-                <h4 class="featuredVideoTitle">The future of your business with HP Cloud Services</h4>
-                <p class="featuredVideoSummary">a three line video summary to make that jerk Paul happy (hope he can't read)</p>
-              </div>
-            </div>
-          </li>
-          <li data-video-id="2050214452001">
-            <div class="mediaBlock">
-              <img src="http://cdn.ttgtmedia.com/microsites/hpenterpriseservicessolutionscentre/images/bc_thumb_hp_key_strength_is_infrastructure.jpg" alt="">
-              <div class="mediaBlockContent">
-                <h4 class="featuredVideoTitle">HP's Key Strength is Infrastructure</h4>
-                <p class="featuredVideoSummary">a three line video summary to make that jerk Paul happy (hope he can't read)</p>
-              </div>
-            </div>
-          </li>
-          <li data-video-id="2050137978001">
-            <div class="mediaBlock">
-            <img src="http://cdn.ttgtmedia.com/microsites/hpenterpriseservicessolutionscentre/images/bc_thumb_security_solutions_are_critical.jpg" alt="">
-              <div class="mediaBlockContent">
-                <h4 class="featuredVideoTitle">Security Solutions are critical</h4>
-                <p class="featuredVideoSummary">a three line video summary to make that jerk Paul happy (hope he can't read)</p>
-              </div>
-            </div>
-          </li>
-          </ul>
-
-        </div>
-
-      </div>
-      <!-- END: featured video player -->
-
-    </div>
-
-    <div id="micrositeContentColumnLeft">
-
-      Left Column
-
-    </div>
-
-    <div id="micrositeContentColumnRight">
-
-      Right Column
-
     </div>
 
   </div>
-
-  <div id="micrositeFooter">Footer</div>
 
 </div>
 </div>

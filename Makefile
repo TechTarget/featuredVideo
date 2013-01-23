@@ -2,7 +2,7 @@
 # jshint (>=0.9) & uglifyjs (>=2.2) are required
 
 SCRIPT_NAME = featuredVideo
-FILESIZE_MAX = 1000
+FILESIZE_MAX = 1500
 FILESIZE_GZIP = `gzip -c ${SCRIPT_NAME}.min.js | wc -c`
 FILESIZE_PASS = "${FILESIZE_GZIP} bytes  \(^_^)/"
 FILESIZE_FAIL = "${FILESIZE_GZIP} bytes  ^(>_<)^"

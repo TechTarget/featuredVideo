@@ -1,5 +1,5 @@
 /*!
-* Featured Video v0.0.1 (http://okize.github.com/)
+* Featured Video v1.0.0 (http://okize.github.com/)
 * Copyright (c) 2013 | Licensed under the MIT license - http://www.opensource.org/licenses/mit-license.php
 */
 
@@ -21,13 +21,14 @@
   var defaults = {
     showPlaylist: true, // show a playlist alongside the video player
     showPlaylistTooltips: true, // show 'tooltips' of the video summary inside the playlist
+    tooltipHtml: '<div class="featuredVideoPlaylistTooltip"></div>', // html for dom element of tooltip
     autoplayFirstVideo: true // play the first video automagically as soon as it's loaded
   };
 
   // plugin constructor
   var Video = function (element, options) {
     this.el = element;
-    this.options = $.extend( {}, defaults, options) ;
+    this.options = $.extend({}, defaults, options);
     this.init();
   };
 
@@ -36,100 +37,227 @@
     init: function() {
 
       this.$element = $(this.el); // featured video component dom container
-      this.player = this.$element.find('.featuredVideoPlayer'); // the video player dom element
+      this.activeVideoId = 0; // stores the video id of the video in the player
+      this.hashVideoId = this.getHashArgs().videoId; // get video id from url hash
+      this.player = this.$element.find('.featuredplayer'); // the video player dom element
+      this.playlist = this.$element.find('.featuredVideoPlaylist'); // the playlist dom element
+      this.playlistVideos = this.playlist.find('li'); // each video item in the playlist
+      this.playlistVideosCount = this.playlistVideos.length; // count of videos in the playlist
+      this.playlistFirstVideoId = this.playlistVideos.eq(0).data('videoId'); // id of first video in playlist
 
-      var brightcoveScript = {
-        url: 'http://admin.brightcove.com/js/BrightcoveExperiences.js', // brightcove script to load aysnc
-        isLoaded: $(document).data('brightcoveScriptLoaded') || false // check via data attr if the script has ben loaded yet
-      };
-
-      // initialize video player
-      this.getPlayer(brightcoveScript);
-
-      // event handler for when player has been loaded and is ready to use
-      this.$element.on('videoPlayerLoaded', function () {
-
-        console.log('video player is ready to be used');
-
-      });
-
-      // initialize playlist
-      this.getPlaylist();
-
-    },
-
-    getPlayer: function (brightcoveScript) {
-
-      // declare these vars in higher scope
-      var bcPlayer, bcPlayerModule;
-
-      // this funciton is run after loading of brightcove script
-      var brightcoveScriptLoaded = function (foo) {
-          console.log(foo);
-
-        // get brightcove object
-        var brightcove = window.brightcove || {};
-
-        // all the data for player has been received by the browser
-        // can now get references to the overall player and API modules
-        window.bcPlayerLoaded = function (bcPlayerId) {
-          bcPlayer = brightcove.api.getExperience(bcPlayerId);
-          bcPlayerModule = bcPlayer.getModule(brightcove.api.modules.APIModules.VIDEO_PLAYER);
-        };
-
-        // the player has now been fully instantiated and
-        // is ready to interact with via the API
-        // only call methods of the API modules after the template ready event has fired
-        window.bcPlayerReady = function () {
-
-
-          // publish custom event
-          foo.trigger('videoPlayerLoaded');
-
-        };
-
-        // no idea what this does, but if it's not here FF & IE9 won't work... go figure
-        // brightcove.createExperiences();
-
-      };
-
-      // check to see if the script has been loaded yet
-      if (!brightcoveScript.isLoaded) {
-
-        // if not, load the Brightcove script async
-        $.ajax({
-          url: brightcoveScript.url,
-          dataType: 'script',
-          success: brightcoveScriptLoaded(this.$element)
-        });
-
-      }
-
-      // save status of BC script
-      $(document).data('brightcoveScriptLoaded', true);
-
-    },
-
-    getPlayerScript: function (url) {
-
-
-
-    },
-
-    getPlaylist: function () {
-
-      // exit if playlist is disabled
-      if (!this.options.showPlaylist) {
-        console.log('no playlist');
+      // make sure there is at least one video in the playlist AND it has a video id
+      if (this.playlistVideosCount <= 0 || (this.playlistVideosCount === 1 && this.playlistFirstVideoId === '') ) {
+        this.$element.hide();
+        $.error('no video ids specified in playlist');
         return;
       }
 
-      // show the playlist
-      // this.playlist.el.show();
+      // initialize video player
+      this.getPlayer();
 
     },
 
-    parseHashArgs: function (url) {
+    player: {}, // this will hold the api that brightcove returns
+
+    getPlayer: function () {
+
+      // config for 3rd party video player provider
+      var playerScript = {
+        url: 'http://admin.brightcove.com/js/BrightcoveExperiences.js', // brightcove script to load aysnc
+        isLoaded: $(document).data('playerScriptLoaded') || false // check via data attr if the script has ben loaded yet
+      };
+
+      var self = this;
+
+      // @todo get the 3rd party script if it hasn't been loaded yet
+      var playerScriptIsLoaded = (!playerScript.isLoaded) ? this.loadPlayerScript(playerScript.url) : this.resolve();
+
+      $.when(playerScriptIsLoaded)
+        .done(function () {
+          self.initializePlayer();
+        })
+        .fail(function () {
+          $.error('Brightcove script failed to load');
+        });
+
+    },
+
+    loadPlayerScript: function (url) {
+
+      // attempt to load 3rd party script and return promise
+      var playerScriptIsLoaded = $.ajax( url, { dataType: 'script' });
+      return playerScriptIsLoaded;
+
+    },
+
+    initializePlayer: function () {
+
+      var self = this;
+
+      // brightcove object
+      var brightcove = window.brightcove || {};
+
+      // all the data for player has been received by the browser
+      // can now get references to the overall player and API modules
+      window.brightcovePlayerLoaded = function (brightcovePlayerId) {
+
+        var brightcoveExp = brightcove.api.getExperience(brightcovePlayerId);
+        self.player = brightcoveExp.getModule(brightcove.api.modules.APIModules.VIDEO_PLAYER);
+
+      };
+
+      // the player has now been fully instantiated and
+      // is ready to interact with via the API
+      // only call methods of the API modules after the template ready event has fired
+      window.brightcovePlayerReady = function () {
+
+        // @todo need to determine if autoplay is appropriate
+        // for example: if user is on this page and clicks, it should play automatically
+        var playType = (self.options.autoplayFirstVideo) ? 'load' : 'cue';
+
+        // add video to player
+        self.playVideo(playType, self.getVideoId() );
+
+        // now we can initialize the playlist to interact with the player
+        self.initializePlaylist();
+
+      };
+
+      // no idea what this does, but if it's not here FF & IE9 won't work... go figure
+      brightcove.createExperiences();
+
+    },
+
+    playVideo: function (playType, videoId) {
+
+      if (playType === 'load') {
+        this.player.loadVideoByID( videoId );
+      } else if (playType === 'cue') {
+        this.player.cueVideoByID( videoId );
+      }
+
+    },
+
+    getVideoId: function (el) {
+
+      // if an element is passed in, grab the video id from it's data attr
+      if (typeof el !== 'undefined') {
+        this.activeVideoId = el.data('videoId');
+      }
+
+      // check if there was a video id set in url hash
+      else if (typeof this.hashVideoId !== 'undefined') {
+
+        // @todo check that videoid is a valid id inside the playlist
+        this.activeVideoId = this.hashVideoId;
+      }
+
+      // otherwise use the id of the first video in the playlist
+      else {
+        this.activeVideoId = this.playlistFirstVideoId;
+      }
+
+      return this.activeVideoId;
+
+    },
+
+    getAllVideoIds: function () {
+
+      //@todo
+      var arr = [];
+      return arr;
+
+    },
+
+    activatePlaylistItem: function (el) {
+
+      // if no element parameter passed, try to select based on data-attr
+      if (typeof el === 'undefined') {
+        el = this.playlist.find('li[data-video-id="' + this.getVideoId() + '"]');
+      }
+
+      this.playlistVideos.removeClass('active');
+
+      el.addClass('active');
+
+    },
+
+    initializePlaylist: function () {
+
+      // if playlist is not enabled, add a class to component, remove playlist from dom and exit
+      // otherwise initialize the playlist
+      if (!this.options.showPlaylist) {
+        this.playlist.remove();
+        this.$element.addClass('noPlaylist');
+        return;
+      }
+
+      var self = this;
+
+      // activate the first video or whichever video was passed via hash in url
+      this.activatePlaylistItem();
+
+      // event handler for playlist clicks
+      this.playlistVideos.on('click', function(e) {
+
+        e.preventDefault();
+        var $this = $(this);
+        self.activatePlaylistItem($this);
+        self.playVideo('load', $this.data('videoId'));
+
+      });
+
+      // if video tooltips are enabled, initialize them
+      if (this.options.showPlaylistTooltips) {
+        this.initializePlaylistTooltips();
+      }
+
+      // show the playlist
+      this.playlist.css('visibility', 'visible');
+
+    },
+
+    initializePlaylistTooltips: function () {
+
+      // dom element that contains 'tooltip'
+      var tooltipContainer = $(this.options.tooltipHtml),
+          playlistOffset = this.playlist.offset();
+
+      // add tooltip to the dom
+      this.$element.append(tooltipContainer);
+
+      // event handler for mouse hover over playlist
+      this.playlistVideos.on({
+
+        mouseenter: function(){
+
+          var $this = $(this),
+              videoSummary = $this.find('.featuredVideoSummary').text(), // text of video summary
+              position = {
+                top: $this.offset().top - playlistOffset.top // position tooltip to the top of the playlist item
+              };
+
+          // check that there's a description set for the video then display the tooltip
+          if (videoSummary !== '') {
+            tooltipContainer
+              .text(videoSummary)
+              .css('top', position.top)
+              .show();
+          }
+
+        },
+
+        mouseleave: function(){
+
+          tooltipContainer.hide();
+
+        }
+
+      });
+
+    },
+
+    getHashArgs: function (url) {
 
       url = url || window.location.href;
 
