@@ -38,7 +38,7 @@
 
       this.$element = $(this.el); // featured video component dom container
       this.activeVideoId = 0; // stores the video id of the video in the player
-      this.hashVideoId = this.getHashArgs().videoId; // get video id from url hash
+      this.hashVideoId = this.getVideoIdFromHash(); // get video id from url hash
       this.player = this.$element.find('.featuredplayer'); // the video player dom element
       this.playlist = this.$element.find('.featuredVideoPlaylist'); // the playlist dom element
       this.playlistVideos = this.playlist.find('li'); // each video item in the playlist
@@ -50,6 +50,13 @@
         this.$element.hide();
         $.error('no video ids specified in playlist');
         return;
+      }
+
+      // bind to hash
+      if ('onhashchange' in window) {
+        window.onhashchange = function() {
+          //console.log('updated hash');
+        };
       }
 
       // initialize video player
@@ -72,6 +79,7 @@
       // @todo get the 3rd party script if it hasn't been loaded yet
       var playerScriptIsLoaded = (!playerScript.isLoaded) ? this.loadPlayerScript(playerScript.url) : this.resolve();
 
+      // load the brightcove script async
       $.when(playerScriptIsLoaded)
         .done(function () {
           self.initializePlayer();
@@ -130,6 +138,7 @@
 
     playVideo: function (playType, videoId) {
 
+      // @todo chould check how user arrived to page for accurate playType
       if (playType === 'load') {
         this.player.loadVideoByID( videoId );
       } else if (playType === 'cue') {
@@ -146,10 +155,11 @@
       }
 
       // check if there was a video id set in url hash
-      else if (typeof this.hashVideoId !== 'undefined') {
+      else if (this.hashVideoId) {
 
         // @todo check that videoid is a valid id inside the playlist
         this.activeVideoId = this.hashVideoId;
+
       }
 
       // otherwise use the id of the first video in the playlist
@@ -176,9 +186,17 @@
         el = this.playlist.find('li[data-video-id="' + this.getVideoId() + '"]');
       }
 
+      // @todo, could select by eq if tracking the active video eq
       this.playlistVideos.removeClass('active');
 
       el.addClass('active');
+
+    },
+
+    updateUrlHash: function (videoId) {
+
+      // update url hash with current video id
+      window.location.hash = 'videoId=' + videoId;
 
     },
 
@@ -201,9 +219,16 @@
       this.playlistVideos.on('click', function(e) {
 
         e.preventDefault();
-        var $this = $(this);
+
+        var $this = $(this),
+            videoId = $this.data('videoId');
+
         self.activatePlaylistItem($this);
-        self.playVideo('load', $this.data('videoId'));
+
+        self.updateUrlHash(videoId);
+
+        // play the selected video
+        self.playVideo('load', videoId);
 
       });
 
@@ -254,6 +279,18 @@
         }
 
       });
+
+    },
+
+    getVideoIdFromHash: function () {
+
+      var videoId = this.getHashArgs().videoId;
+
+      if (typeof videoId !== 'undefined') {
+        videoId = false;
+      }
+
+      return videoId;
 
     },
 
