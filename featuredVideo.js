@@ -19,10 +19,11 @@
   // defaults
   var pluginName = 'featuredVideo';
   var defaults = {
+    autoplayFirstVideo: true, // play the first video automagically as soon as it's loaded
+    supportsDeepLinking: true, // supports appending videoId in url hash to link to any video in playlist
     showPlaylist: true, // show a playlist alongside the video player
     showPlaylistTooltips: true, // show 'tooltips' of the video summary inside the playlist
-    tooltipHtml: '<div class="featuredVideoPlaylistTooltip"></div>', // html for dom element of tooltip
-    autoplayFirstVideo: true // play the first video automagically as soon as it's loaded
+    tooltipHtml: '<div class="featuredVideoPlaylistTooltip"></div>' // html for dom element of tooltip
   };
 
   // plugin constructor
@@ -52,11 +53,10 @@
         return;
       }
 
-      // bind to hash
-      if ('onhashchange' in window) {
-        window.onhashchange = function() {
-          //console.log('updated hash');
-        };
+      if (this.options.supportsDeepLinking) {
+
+        this.initHashLinking();
+
       }
 
       // initialize video player
@@ -65,6 +65,19 @@
     },
 
     player: {}, // this will hold the api that brightcove returns
+
+    initHashLinking: function () {
+
+      // bind to hash
+      if ('onhashchange' in window) {
+        var self = this;
+        window.onhashchange = function() {
+          self.activeVideoId = self.getVideoIdFromHash();
+          console.log('updated hash to: ' + self.activeVideoId);
+        };
+      }
+
+    },
 
     getPlayer: function () {
 
@@ -273,9 +286,7 @@
         },
 
         mouseleave: function(){
-
           tooltipContainer.hide();
-
         }
 
       });
