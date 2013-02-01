@@ -1,5 +1,5 @@
 /*!
-* Featured Video v1.0.0 (http://okize.github.com/)
+* Featured Video v1.0.2 (http://okize.github.com/)
 * Copyright (c) 2013 | Licensed under the MIT license - http://www.opensource.org/licenses/mit-license.php
 */
 
@@ -39,7 +39,7 @@
 
       this.$element = $(this.el); // featured video component dom container
       this.activeVideoId = 0; // stores the video id of the video in the player
-      this.hashVideoId = this.getVideoIdFromHash(); // get video id from url hash
+      this.hashVideoId = this.getVideoIdFromUrl(); // get video id from url hash
       this.player = this.$element.find('.featuredplayer'); // the video player dom element
       this.playlist = this.$element.find('.featuredVideoPlaylist'); // the playlist dom element
       this.playlistVideos = this.playlist.find('li'); // each video item in the playlist
@@ -53,11 +53,14 @@
         return;
       }
 
+      // @todo
       if (this.options.supportsDeepLinking) {
-
         this.initHashLinking();
-
       }
+
+      // for testing url arguments function
+      // @todo; remove this later
+      // this.testGetArgsFromUrl();
 
       // initialize video player
       this.getPlayer();
@@ -66,14 +69,23 @@
 
     player: {}, // this will hold the api that brightcove returns
 
+    getPlaylistIds: function() {
+      var arr = [];
+      this.playlistVideos.each(function (i) {
+        var id = $(this).data('videoId');
+        arr.push( id );
+      });
+      return arr;
+    },
+
     initHashLinking: function () {
 
       // bind to hash
       if ('onhashchange' in window) {
         var self = this;
         window.onhashchange = function() {
-          self.activeVideoId = self.getVideoIdFromHash();
-          console.log('updated hash to: ' + self.activeVideoId);
+          self.activeVideoId = self.getVideoIdFromUrl();
+          self.playVideo('load', self.activeVideoId);
         };
       }
 
@@ -293,38 +305,65 @@
 
     },
 
-    getVideoIdFromHash: function () {
+    getVideoIdFromUrl: function () {
 
-      var videoId = this.getHashArgs().videoId;
+      var videoId = this.getArgsFromUrl().videoId || this.getArgsFromUrl().bctid;
 
-      if (typeof videoId !== 'undefined') {
-        videoId = false;
+      if (typeof videoId === 'undefined') {
+        videoId = null;
       }
 
       return videoId;
 
     },
 
-    getHashArgs: function (url) {
+    testGetArgsFromUrl: function () {
 
+      console.log('test started...');
+
+      var ids = [1982178965001, 1897188942001, 1871056203001, 1871107119001, 1834784326001, 1832858263001, 1832858253001, 1828362629001, 1785579854001, 1785590334001, 1785136996001, 1768317771001, 1766325439001, 1745733539001, 1730775741001, 1727315889001, 1711303860001, 1697332157001, 1677122305001, 1643143173001, 1643104443001, 1643120878001, 1643104441001, 1643120880001];
+
+      var urls = [
+        'http://localhost/featuredVideo/example/index.html#videoId=1982178965001',
+        'http://localhost/featuredVideo/example/index.html?bcpid=2117382598001&bckey=AQ~~,AAAAAFGE4wo~,g57wOIK2TXKMBHTPnffWcp0t79yQC9T_&bctid=1897188942001',
+        'http://localhost/featuredVideo/example/index.html?bcpid=2117382598001&bctid=1871056203001',
+        'http://localhost/featuredVideo/example/index.html?bctid=1871056203001',
+        'http://localhost/featuredVideo/example/index.html#bctid=1871107119001',
+        'http://localhost/featuredVideo/example/index.html?bcpid=2117382598001&bckey=AQ~~,AAAAAFGE4wo~,g57wOIK2TXKMBHTPnffWcp0t79yQC9T_&bctid=1897188942001#videoId=1832858263001'
+      ];
+
+      var test, result;
+      for (var i = 0, len = urls.length; i < len; i++) {
+        test = this.getArgsFromUrl(urls[i]).videoId || this.getArgsFromUrl(urls[i]).bctid;
+        result = (typeof test !== 'undefined' && test === ids[i].toString()) ? 'pass' : 'fail';
+        console.log('test #' + (i+1) + ' -> ' +  result);
+      }
+
+      console.log('test complete!');
+
+    },
+
+    getArgsFromUrl: function (url) {
+
+      // pass in a url or grab from current window
       url = url || window.location.href;
 
-      var vars = {},
-          hashes = url.slice(url.indexOf('#') + 1).split('&');
+      var args = {},
+          params = url.slice(url.indexOf('#') + 1).split('&');
 
-      for (var i = 0; i < hashes.length; i++) {
+      for (var i = 0, len = params.length; i < len; i++) {
 
-        var hash = hashes[i].split('=');
+        var param = params[i].split('=');
 
-        if (hash.length > 1) {
-          vars[hash[0]] = hash[1];
+        if (param.length > 1) {
+          args[param[0]] = param[1];
         } else {
-          vars[hash[0]] = null;
+          args[param[0]] = null;
         }
 
       }
 
-      return vars;
+      return args;
 
     }
 
