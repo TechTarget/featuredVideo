@@ -1,5 +1,5 @@
 /*!
-* Featured Video v1.0.2 (http://okize.github.com/)
+* Featured Video v1.1.2 (http://okize.github.com/)
 * Copyright (c) 2013 | Licensed under the MIT license - http://www.opensource.org/licenses/mit-license.php
 */
 
@@ -53,7 +53,7 @@
         return;
       }
 
-      // @todo
+      // @todo move this into playlist functionality?
       if (this.options.supportsDeepLinking) {
         this.initHashLinking();
       }
@@ -69,27 +69,6 @@
 
     player: {}, // this will hold the api that brightcove returns
 
-    getPlaylistIds: function() {
-      var arr = [];
-      this.playlistVideos.each(function (i) {
-        var id = $(this).data('videoId');
-        arr.push( id );
-      });
-      return arr;
-    },
-
-    initHashLinking: function () {
-
-      // bind to hash
-      if ('onhashchange' in window) {
-        var self = this;
-        window.onhashchange = function() {
-          self.activeVideoId = self.getVideoIdFromUrl();
-          self.playVideo('load', self.activeVideoId);
-        };
-      }
-
-    },
 
     getPlayer: function () {
 
@@ -170,6 +149,11 @@
         this.player.cueVideoByID( videoId );
       }
 
+      // if we're showing a playlist, 'select' the correct video in the list
+      if (this.options.showPlaylist) {
+        this.activatePlaylistItem();
+      }
+
     },
 
     getVideoId: function (el) {
@@ -180,9 +164,9 @@
       }
 
       // check if there was a video id set in url hash
-      else if (this.hashVideoId) {
+      // and check that videoid is a valid id inside the playlist
+      else if (this.hashVideoId && this.hasValidId(this.hashVideoId)) {
 
-        // @todo check that videoid is a valid id inside the playlist
         this.activeVideoId = this.hashVideoId;
 
       }
@@ -196,19 +180,25 @@
 
     },
 
-    getAllVideoIds: function () {
+    hasValidId: function (videoId) {
 
-      //@todo
-      var arr = [];
-      return arr;
+      // check that the passed video id exists in the playlist
+      var idList = this.getPlaylistIds();
+
+      // ie7/8 does not support array.indexOf
+      if ( idList.indexOf(videoId) >= 0) {
+        return true;
+      }
+
+      return false;
 
     },
 
     activatePlaylistItem: function (el) {
 
-      // if no element parameter passed, try to select based on data-attr
+      // if no element parameter passed, try to select el based on data-attr
       if (typeof el === 'undefined') {
-        el = this.playlist.find('li[data-video-id="' + this.getVideoId() + '"]');
+        el = this.playlist.find('li[data-video-id="' + this.activeVideoId + '"]');
       }
 
       // @todo, could select by eq if tracking the active video eq
@@ -238,7 +228,7 @@
       var self = this;
 
       // activate the first video or whichever video was passed via hash in url
-      this.activatePlaylistItem();
+      // this.activatePlaylistItem();
 
       // event handler for playlist clicks
       this.playlistVideos.on('click', function(e) {
@@ -248,7 +238,8 @@
         var $this = $(this),
             videoId = $this.data('videoId');
 
-        self.activatePlaylistItem($this);
+        // @todo, this is part of the playVideo function now
+        //self.activatePlaylistItem($this);
 
         self.updateUrlHash(videoId);
 
@@ -302,6 +293,31 @@
         }
 
       });
+
+    },
+
+    getPlaylistIds: function() {
+      var arr = [];
+      this.playlistVideos.each(function () {
+        var videoId = $(this).data('videoId').toString();
+        arr.push( videoId );
+      });
+      return arr;
+    },
+
+    initHashLinking: function () {
+
+      // bind to hash
+      if ('onhashchange' in window) {
+
+        var self = this;
+
+        window.onhashchange = function() {
+          self.activeVideoId = self.getVideoIdFromUrl();
+          self.playVideo('load', self.activeVideoId);
+        };
+
+      }
 
     },
 
