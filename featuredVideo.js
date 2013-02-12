@@ -339,7 +339,7 @@
 
         $(window).on('hashchange', function(e) {
 
-          e.preventDefault();
+           e.preventDefault();
 
           // @todo this kludge needs to be fixed
           if (self.playOnHashChange) {
@@ -347,7 +347,7 @@
             self.playVideo('load', self.activeVideoId);
           }
 
-          // @todo
+          // set this back to true
           self.playOnHashChange = true;
 
         });
