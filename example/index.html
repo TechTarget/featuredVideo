@@ -1,426 +1,284 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
-<head>
-
-  <meta charset="utf-8">
-  <title>Featured Video Component Tests</title>
-  <link rel="stylesheet" href="css/style.css" media="screen" />
-  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
-  <script src="../featuredVideo.js"></script>
-  <script>
-
-    $(document).on('ready', function() {
-
-      // init plugin
-      $('.featuredVideo').featuredVideo({
-        autoplayFirstVideo: false,
-        supportsDeepLinking: true,
-        showPlaylist: true,
-        showPlaylistTooltips: true,
-        tooltipHtml: '<div class="featuredVideoPlaylistTooltip"></div>'
-      });
-
-    });
-
-  </script>
-
-</head>
-<body>
-<div id="micrositeContainer">
-<div id="micrositeContainerInner">
-<div id="micrositeContainerCompress">
-
-  <div id="micrositeHeader">
-
-    <h2>Header</h2>
-
-  </div>
-
-  <div id="micrositeContent">
-
-    <div id="micrositeContentColumnFull">
-      <ol>
-      <li><a href="./index.html#videoId=1982178965001">Tip #60: Merging Your Professional Life & Personal Life, All in One</a></li>
-      <li><a href="./index.html#videoId=1897188942001">Tip #67: Hackers Will Try Anything</a></li>
-      <li><a href="./index.html#videoId=1871056203001">Tip #24: Tablets aren't Toys</a></li>
-      <li><a href="./index.html#videoId=1871107119001">Tip #33: MDM Newsreel</a></li>
-      <li><a href="./index.html#videoId=1643120880001">Tip #297: Secure Environments Come from Secure Back Ends (last in list)</a></li>
-      </ol>
-    </div>
-
-    <div class="featuredVideoTestWrapper">
-
-    <h2>Featured Video - autoplay disabled &amp; tooltips enabled</h2>
-
-    <div class="featuredVideo">
-
-      <div class="featuredVideoPlayer">
-        <object class="BrightcoveExperience" id="givethisplayeranid">
-          <param name="bgcolor" value="#000000">
-          <param name="wmode" value="opaque">
-          <param name="width" value="640">
-          <param name="height" value="360">
-          <param name="playerID" value="2117382598001">
-          <param name="playerKey" value="AQ~~,AAAAAFGE4wo~,g57wOIK2TXKMBHTPnffWcp0t79yQC9T_">
-          <param name="isVid" value="true">
-          <param name="isUI" value="true">
-          <param name="dynamicStreaming" value="true">
-          <param name="includeAPI" value="true">
-          <param name="templateLoadHandler" value="brightcovePlayerLoaded">
-          <param name="templateReadyHandler" value="brightcovePlayerReady">
-        </object>
-      </div>
-
-      <div class="featuredVideoPlaylist">
-        <ul>
-          <li data-video-id="1982178965001">
-            <div class="mediaBlock">
-              <img alt="" src="http://cdn.ttgtmedia.com/microsites/rimembracingmobilechaos2/images/Tip_60.jpg">
-              <div class="mediaBlockContent">
-                <h4 class="featuredVideoTitle">Tip #60: Merging Your Professional Life &amp; Personal Life, All in One</h4>
-                <p class="featuredVideoSummary">a three line video summary that goes on and on and on and on and on and on and on and on and on and on (~120 chars)</p>
+  <head>
+    <meta charset="utf-8">
+    <title>FeaturedVideo Component Tests</title>
+    <link rel="stylesheet" href="css/style.css" media="screen">
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
+    <script src="../featuredVideo.js"></script>
+    <script src="js/test.js"></script>
+  </head>
+  <body>
+    <div id="micrositeContainer">
+      <div id="micrositeContainerInner">
+        <div id="micrositeContainerCompress">
+          <div id="micrositeHeader">
+            <h2>Header</h2>
+          </div>
+          <div id="micrositeContent">
+            <div id="micrositeContentColumnFull">
+              <ol>
+                <li><a href="#videoId=1982178965001">Tip #60: Merging Your Professional Life & Personal Life, All in One</a></li>
+                <li><a href="#videoId=1897188942001">Tip #67: Hackers Will Try Anything</a></li>
+                <li><a href="#videoId=1871056203001">Tip #24: Tablets aren't Toys</a></li>
+                <li><a href="#videoId=1871107119001">Tip #33: MDM Newsreel</a></li>
+                <li><a href="#videoId=1643120880001">Tip #297: Secure Environments Come from Secure Back Ends (last in list)</a></li>
+              </ol>
+            </div>
+            <div class="featuredVideoTestWrapper">
+              <h2>Featured Video - autoplay disabled &amp; tooltips enabled</h2>
+              <div class="featuredVideo">
+                <div class="featuredVideoPlayer">
+                  <object id="givethisplayeranid" class="BrightcoveExperience">
+                    <param name="bgcolor" value="#000000"></param>
+                    <param name="wmode" value="opaque"></param>
+                    <param name="width" value="640"></param>
+                    <param name="height" value="360"></param>
+                    <param name="playerID" value="2117382598001"></param>
+                    <param name="playerKey" value="AQ~~,AAAAAFGE4wo~,g57wOIK2TXKMBHTPnffWcp0t79yQC9T_"></param>
+                    <param name="isVid" value="true"></param>
+                    <param name="isUI" value="true"></param>
+                    <param name="dynamicStreaming" value="true"></param>
+                    <param name="includeAPI" value="true"></param>
+                    <param name="templateLoadHandler" value="brightcovePlayerLoaded"></param>
+                    <param name="templateReadyHandler" value="brightcovePlayerReady"></param>
+                  </object>
+                </div>
+                <div class="featuredVideoPlaylist">
+                  <h3 class="featuredVideoPlaylistHeader">Featured Video</h3>
+                  <ul>
+                    <li data-video-id="1982178965001">
+                      <div class="mediaBlock"><img alt="" src="http://cdn.ttgtmedia.com/microsites/rimembracingmobilechaos2/images/Tip_60.jpg">
+                        <div class="mediaBlockContent">
+                          <h4 class="featuredVideoTitle">Tip #60: Merging Your Professional Life &amp; Personal Life, All in One</h4>
+                          <p class="featuredVideoSummary">a three line video summary that goes on and on and on and on and on and on and on and on and on and on (~120 chars)</p>
+                        </div>
+                      </div>
+                    </li>
+                    <li data-video-id="1897188942001">
+                      <div class="mediaBlock"><img alt="" src="http://cdn.ttgtmedia.com/microsites/rimembracingmobilechaos2/images/Tip_67.jpg">
+                        <div class="mediaBlockContent">
+                          <h4 class="featuredVideoTitle">Tip #67: Hackers Will Try Anything</h4>
+                          <p class="featuredVideoSummary">a three line video summary that goes on and on and on and on and on and on and on and on and on and on (~120 chars)</p>
+                        </div>
+                      </div>
+                    </li>
+                    <li data-video-id="1871056203001">
+                      <div class="mediaBlock"><img alt="" src="http://cdn.ttgtmedia.com/microsites/rimembracingmobilechaos2/images/Tip_24.jpg">
+                        <div class="mediaBlockContent">
+                          <h4 class="featuredVideoTitle">Tip #24: Tablets aren't Toys</h4>
+                          <p class="featuredVideoSummary">a three line video summary that goes on and on and on and on and on and on and on and on and on and on (~120 chars)</p>
+                        </div>
+                      </div>
+                    </li>
+                    <li data-video-id="1871107119001">
+                      <div class="mediaBlock"><img alt="" src="http://cdn.ttgtmedia.com/microsites/rimembracingmobilechaos2/images/Tip_33.jpg">
+                        <div class="mediaBlockContent">
+                          <h4 class="featuredVideoTitle">Tip #33 MDM Newsreel</h4>
+                          <p class="featuredVideoSummary">a three line video summary that goes on and on and on and on and on and on and on and on and on and on (~120 chars)</p>
+                        </div>
+                      </div>
+                    </li>
+                    <li data-video-id="1834784326001">
+                      <div class="mediaBlock"><img alt="" src="http://cdn.ttgtmedia.com/microsites/rimembracingmobilechaos2/images/Tip_71.jpg">
+                        <div class="mediaBlockContent">
+                          <h4 class="featuredVideoTitle">Tip #71: Not all Applications are Created Equal</h4>
+                          <p class="featuredVideoSummary">a three line video summary that goes on and on and on and on and on and on and on and on and on and on (~120 chars)</p>
+                        </div>
+                      </div>
+                    </li>
+                    <li data-video-id="1832858263001">
+                      <div class="mediaBlock"><img alt="" src="http://cdn.ttgtmedia.com/microsites/rimembracingmobilechaos2/images/Tip_3.jpg">
+                        <div class="mediaBlockContent">
+                          <h4 class="featuredVideoTitle">Tip #3: A Lost Phone is no Reason to Panic</h4>
+                          <p class="featuredVideoSummary">a three line video summary that goes on and on and on and on and on and on and on and on and on and on (~120 chars)</p>
+                        </div>
+                      </div>
+                    </li>
+                    <li data-video-id="1832858253001">
+                      <div class="mediaBlock"><img alt="" src="http://cdn.ttgtmedia.com/microsites/rimembracingmobilechaos2/images/Tip_49.jpg">
+                        <div class="mediaBlockContent">
+                          <h4 class="featuredVideoTitle">Tip #49: Picture ID Not Required When Using MDM Software</h4>
+                          <p class="featuredVideoSummary">a three line video summary that goes on and on and on and on and on and on and on and on and on and on (~120 chars)</p>
+                        </div>
+                      </div>
+                    </li>
+                    <li data-video-id="1828362629001">
+                      <div class="mediaBlock"><img alt="" src="http://cdn.ttgtmedia.com/microsites/rimembracingmobilechaos2/images/Tip_75.jpg">
+                        <div class="mediaBlockContent">
+                          <h4 class="featuredVideoTitle">Tip #75: Don't Treat Lucky Caller #7 Like a Security Threat</h4>
+                          <p class="featuredVideoSummary">a three line video summary that goes on and on and on and on and on and on and on and on and on and on (~120 chars)</p>
+                        </div>
+                      </div>
+                    </li>
+                    <li data-video-id="1785579854001">
+                      <div class="mediaBlock"><img alt="" src="http://cdn.ttgtmedia.com/microsites/rimembracingmobilechaos2/images/Tip_28.jpg">
+                        <div class="mediaBlockContent">
+                          <h4 class="featuredVideoTitle">Tip #28: Human Device Lock</h4>
+                          <p class="featuredVideoSummary">a three line video summary that goes on and on and on and on and on and on and on and on and on and on (~120 chars)</p>
+                        </div>
+                      </div>
+                    </li>
+                    <li data-video-id="1785590334001">
+                      <div class="mediaBlock"><img alt="" src="http://cdn.ttgtmedia.com/microsites/rimembracingmobilechaos2/images/Tip_111.jpg">
+                        <div class="mediaBlockContent">
+                          <h4 class="featuredVideoTitle">Tip #111: An Unprotected Cell Phone is a Huge Risk. A Brick Isn't</h4>
+                          <p class="featuredVideoSummary">a three line video summary that goes on and on and on and on and on and on and on and on and on and on (~120 chars)</p>
+                        </div>
+                      </div>
+                    </li>
+                    <li data-video-id="1785136996001">
+                      <div class="mediaBlock"><img alt="" src="http://cdn.ttgtmedia.com/microsites/rimembracingmobilechaos2/images/Tip_98.jpg">
+                        <div class="mediaBlockContent">
+                          <h4 class="featuredVideoTitle">Tip #98: It Always Starts With Just One Request</h4>
+                          <p class="featuredVideoSummary">a three line video summary that goes on and on and on and on and on and on and on and on and on and on (~120 chars)</p>
+                        </div>
+                      </div>
+                    </li>
+                    <li data-video-id="1768317771001">
+                      <div class="mediaBlock"><img alt="" src="http://cdn.ttgtmedia.com/microsites/rimembracingmobilechaos2/images/Tip_131.jpg">
+                        <div class="mediaBlockContent">
+                          <h4 class="featuredVideoTitle">Tip #131: No Device- Personal or Work- Operates When Wet</h4>
+                          <p class="featuredVideoSummary">a three line video summary that goes on and on and on and on and on and on and on and on and on and on (~120 chars)</p>
+                        </div>
+                      </div>
+                    </li>
+                    <li data-video-id="1766325439001">
+                      <div class="mediaBlock"><img alt="" src="http://cdn.ttgtmedia.com/microsites/rimembracingmobilechaos2/images/Tip_174.jpg">
+                        <div class="mediaBlockContent">
+                          <h4 class="featuredVideoTitle">Tip #174: Don't Risk the Business Over Four Digits</h4>
+                          <p class="featuredVideoSummary">a three line video summary that goes on and on and on and on and on and on and on and on and on and on (~120 chars)</p>
+                        </div>
+                      </div>
+                    </li>
+                    <li data-video-id="1745733539001">
+                      <div class="mediaBlock"><img alt="" src="http://cdn.ttgtmedia.com/microsites/rimembracingmobilechaos2/images/Tip_11.jpg">
+                        <div class="mediaBlockContent">
+                          <h4 class="featuredVideoTitle">Tip #11: Don't Pay the Price of Free Apps</h4>
+                          <p class="featuredVideoSummary">a three line video summary that goes on and on and on and on and on and on and on and on and on and on (~120 chars)</p>
+                        </div>
+                      </div>
+                    </li>
+                    <li data-video-id="1730775741001">
+                      <div class="mediaBlock"><img alt="" src="http://cdn.ttgtmedia.com/microsites/rimembracingmobilechaos2/images/Tip_67_Mulitple%20Devices.jpg">
+                        <div class="mediaBlockContent">
+                          <h4 class="featuredVideoTitle">Tip #67: Multiple Devices Create Multiple Problems</h4>
+                          <p class="featuredVideoSummary">a three line video summary that goes on and on and on and on and on and on and on and on and on and on (~120 chars)</p>
+                        </div>
+                      </div>
+                    </li>
+                    <li data-video-id="1727315889001">
+                      <div class="mediaBlock"><img alt="" src="http://cdn.ttgtmedia.com/microsites/rimembracingmobilechaos2/images/Tip_84.jpg">
+                        <div class="mediaBlockContent">
+                          <h4 class="featuredVideoTitle">Tip #84: Sloppiness is a choice. MDM isn't</h4>
+                          <p class="featuredVideoSummary">a three line video summary that goes on and on and on and on and on and on and on and on and on and on (~120 chars)</p>
+                        </div>
+                      </div>
+                    </li>
+                    <li data-video-id="1711303860001">
+                      <div class="mediaBlock"><img alt="" src="http://cdn.ttgtmedia.com/microsites/rimembracingmobilechaos2/images/Tip_114.jpg">
+                        <div class="mediaBlockContent">
+                          <h4 class="featuredVideoTitle">Tip #114: They Can't Outrun MDM</h4>
+                          <p class="featuredVideoSummary">a three line video summary that goes on and on and on and on and on and on and on and on and on and on (~120 chars)</p>
+                        </div>
+                      </div>
+                    </li>
+                    <li data-video-id="1697332157001">
+                      <div class="mediaBlock"><img alt="" src="http://cdn.ttgtmedia.com/microsites/rimembracingmobilechaos2/images/Tip_72.jpg">
+                        <div class="mediaBlockContent">
+                          <h4 class="featuredVideoTitle">Tip #72 Tee Up MDM for Secure Access, Anywhere</h4>
+                          <p class="featuredVideoSummary">a three line video summary that goes on and on and on and on and on and on and on and on and on and on (~120 chars)</p>
+                        </div>
+                      </div>
+                    </li>
+                    <li data-video-id="1677122305001">
+                      <div class="mediaBlock"><img alt="" src="http://cdn.ttgtmedia.com/microsites/rimembracingmobilechaos2/images/Tip_336.jpg">
+                        <div class="mediaBlockContent">
+                          <h4 class="featuredVideoTitle">Tip #336: All QR Codes Aren't Created Equal, or Secure</h4>
+                          <p class="featuredVideoSummary">a three line video summary that goes on and on and on and on and on and on and on and on and on and on (~120 chars)</p>
+                        </div>
+                      </div>
+                    </li>
+                    <li data-video-id="1643143173001">
+                      <div class="mediaBlock"><img alt="" src="http://cdn.ttgtmedia.com/microsites/rimembracingmobilechaos2/images/Tip_116.jpg">
+                        <div class="mediaBlockContent">
+                          <h4 class="featuredVideoTitle">Tip #116: Without Security, a Smartphone is a Megaphone</h4>
+                          <p class="featuredVideoSummary">a three line video summary that goes on and on and on and on and on and on and on and on and on and on (~120 chars)</p>
+                        </div>
+                      </div>
+                    </li>
+                    <li data-video-id="1643104443001">
+                      <div class="mediaBlock"><img alt="" src="http://cdn.ttgtmedia.com/microsites/rimembracingmobilechaos2/images/Tip_471.jpg">
+                        <div class="mediaBlockContent">
+                          <h4 class="featuredVideoTitle">Tip #471: Blocking Attachments Isn't the Answer</h4>
+                          <p class="featuredVideoSummary">a three line video summary that goes on and on and on and on and on and on and on and on and on and on (~120 chars)</p>
+                        </div>
+                      </div>
+                    </li>
+                    <li data-video-id="1643120878001">
+                      <div class="mediaBlock"><img alt="" src="http://cdn.ttgtmedia.com/microsites/rimembracingmobilechaos2/images/Tip_782.jpg">
+                        <div class="mediaBlockContent">
+                          <h4 class="featuredVideoTitle">Tip #782: Blocking App-by-App is Futile</h4>
+                          <p class="featuredVideoSummary">a three line video summary that goes on and on and on and on and on and on and on and on and on and on (~120 chars)</p>
+                        </div>
+                      </div>
+                    </li>
+                    <li data-video-id="1643104441001">
+                      <div class="mediaBlock"><img alt="" src="http://cdn.ttgtmedia.com/microsites/rimembracingmobilechaos2/images/Tip_118.jpg">
+                        <div class="mediaBlockContent">
+                          <h4 class="featuredVideoTitle">Tip #118: It Doesn't Take a Wizard to Undermine Security</h4>
+                          <p class="featuredVideoSummary">a three line video summary that goes on and on and on and on and on and on and on and on and on and on (~120 chars)</p>
+                        </div>
+                      </div>
+                    </li>
+                    <li data-video-id="1643120880001">
+                      <div class="mediaBlock"><img alt="" src="http://cdn.ttgtmedia.com/microsites/rimembracingmobilechaos2/images/Tip_297.jpg">
+                        <div class="mediaBlockContent">
+                          <h4 class="featuredVideoTitle">Tip #297: Secure Environments Come from Secure Back Ends</h4>
+                          <p class="featuredVideoSummary">a three line video summary that goes on and on and on and on and on and on and on and on and on and on (~120 chars)</p>
+                        </div>
+                      </div>
+                    </li>
+                  </ul>
+                </div>
               </div>
             </div>
-          </li>
-
-          <li data-video-id="1897188942001">
-            <div class="mediaBlock">
-              <img alt="" src="http://cdn.ttgtmedia.com/microsites/rimembracingmobilechaos2/images/Tip_67.jpg">
-
-              <div class="mediaBlockContent">
-                <h4 class="featuredVideoTitle">Tip #67: Hackers Will Try Anything</h4>
-
-                <p class="featuredVideoSummary">a three line video summary that goes on and on and on and on and on and on and on and on and on and on (~120
-                chars)</p>
-              </div>
+            <div id="micrositeContentColumnLeft">
+              <p>In scaevola molestiae vel, his eu omittam insolens. Ut his sale tritani, nam eu corpora argumentum eloquentiam, vim unum forensibus et. Ne alia atomorum cum. Eu interesset ullamcorper eos, cum ea quando intellegat. Ne alia atomorum cum. Eu interesset ullamcorper eos, cum ea quando intellegat. Ne alia atomorum cum. Eu interesset ullamcorper eos, cum ea quando intellegat. In mel dissentiunt intellegebat, quem illud te eos. Est ornatus legimus recteque ad, te oblique nonumes ius, ex paulo scaevola nec.</p>
             </div>
-          </li>
-
-          <li data-video-id="1871056203001">
-            <div class="mediaBlock">
-              <img alt="" src="http://cdn.ttgtmedia.com/microsites/rimembracingmobilechaos2/images/Tip_24.jpg">
-
-              <div class="mediaBlockContent">
-                <h4 class="featuredVideoTitle">Tip #24: Tablets aren't Toys</h4>
-
-                <p class="featuredVideoSummary">a three line video summary that goes on and on and on and on and on and on and on and on and on and on (~120
-                chars)</p>
-              </div>
+            <div id="micrositeContentColumnRight">
+              <p>Et vel nihil discere delicata, pro autem fierent definitiones ea. Purto nostro tacimates in sea. Vel ea habeo pertinacia, has amet tollit suavitate te. Et quodsi rationibus cum. In eos dicta sanctus, adhuc civibus ad ius. Duo corrumpit incorrupte cu. Illum molestie mel cu, qui ei prompta bonorum probatus.</p>
             </div>
-          </li>
-
-          <li data-video-id="1871107119001">
-            <div class="mediaBlock">
-              <img alt="" src="http://cdn.ttgtmedia.com/microsites/rimembracingmobilechaos2/images/Tip_33.jpg">
-
-              <div class="mediaBlockContent">
-                <h4 class="featuredVideoTitle">Tip #33 MDM Newsreel</h4>
-
-                <p class="featuredVideoSummary">a three line video summary that goes on and on and on and on and on and on and on and on and on and on (~120
-                chars)</p>
-              </div>
-            </div>
-          </li>
-
-          <li data-video-id="1834784326001">
-            <div class="mediaBlock">
-              <img alt="" src="http://cdn.ttgtmedia.com/microsites/rimembracingmobilechaos2/images/Tip_71.jpg">
-
-              <div class="mediaBlockContent">
-                <h4 class="featuredVideoTitle">Tip #71: Not all Applications are Created Equal</h4>
-
-                <p class="featuredVideoSummary">a three line video summary that goes on and on and on and on and on and on and on and on and on and on (~120
-                chars)</p>
-              </div>
-            </div>
-          </li>
-
-          <li data-video-id="1832858263001">
-            <div class="mediaBlock">
-              <img alt="" src="http://cdn.ttgtmedia.com/microsites/rimembracingmobilechaos2/images/Tip_3.jpg">
-
-              <div class="mediaBlockContent">
-                <h4 class="featuredVideoTitle">Tip #3: A Lost Phone is no Reason to Panic</h4>
-
-                <p class="featuredVideoSummary">a three line video summary that goes on and on and on and on and on and on and on and on and on and on (~120
-                chars)</p>
-              </div>
-            </div>
-          </li>
-
-          <li data-video-id="1832858253001">
-            <div class="mediaBlock">
-              <img alt="" src="http://cdn.ttgtmedia.com/microsites/rimembracingmobilechaos2/images/Tip_49.jpg">
-
-              <div class="mediaBlockContent">
-                <h4 class="featuredVideoTitle">Tip #49: Picture ID Not Required When Using MDM Software</h4>
-
-                <p class="featuredVideoSummary">a three line video summary that goes on and on and on and on and on and on and on and on and on and on (~120
-                chars)</p>
-              </div>
-            </div>
-          </li>
-
-          <li data-video-id="1828362629001">
-            <div class="mediaBlock">
-              <img alt="" src="http://cdn.ttgtmedia.com/microsites/rimembracingmobilechaos2/images/Tip_75.jpg">
-
-              <div class="mediaBlockContent">
-                <h4 class="featuredVideoTitle">Tip #75: Don't Treat Lucky Caller #7 Like a Security Threat</h4>
-
-                <p class="featuredVideoSummary">a three line video summary that goes on and on and on and on and on and on and on and on and on and on (~120
-                chars)</p>
-              </div>
-            </div>
-          </li>
-
-          <li data-video-id="1785579854001">
-            <div class="mediaBlock">
-              <img alt="" src="http://cdn.ttgtmedia.com/microsites/rimembracingmobilechaos2/images/Tip_28.jpg">
-
-              <div class="mediaBlockContent">
-                <h4 class="featuredVideoTitle">Tip #28: Human Device Lock</h4>
-
-                <p class="featuredVideoSummary">a three line video summary that goes on and on and on and on and on and on and on and on and on and on (~120
-                chars)</p>
-              </div>
-            </div>
-          </li>
-
-          <li data-video-id="1785590334001">
-            <div class="mediaBlock">
-              <img alt="" src="http://cdn.ttgtmedia.com/microsites/rimembracingmobilechaos2/images/Tip_111.jpg">
-
-              <div class="mediaBlockContent">
-                <h4 class="featuredVideoTitle">Tip #111: An Unprotected Cell Phone is a Huge Risk. A Brick Isn't</h4>
-
-                <p class="featuredVideoSummary">a three line video summary that goes on and on and on and on and on and on and on and on and on and on (~120
-                chars)</p>
-              </div>
-            </div>
-          </li>
-
-          <li data-video-id="1785136996001">
-            <div class="mediaBlock">
-              <img alt="" src="http://cdn.ttgtmedia.com/microsites/rimembracingmobilechaos2/images/Tip_98.jpg">
-
-              <div class="mediaBlockContent">
-                <h4 class="featuredVideoTitle">Tip #98: It Always Starts With Just One Request</h4>
-
-                <p class="featuredVideoSummary">a three line video summary that goes on and on and on and on and on and on and on and on and on and on (~120
-                chars)</p>
-              </div>
-            </div>
-          </li>
-
-          <li data-video-id="1768317771001">
-            <div class="mediaBlock">
-              <img alt="" src="http://cdn.ttgtmedia.com/microsites/rimembracingmobilechaos2/images/Tip_131.jpg">
-
-              <div class="mediaBlockContent">
-                <h4 class="featuredVideoTitle">Tip #131: No Device- Personal or Work- Operates When Wet</h4>
-
-                <p class="featuredVideoSummary">a three line video summary that goes on and on and on and on and on and on and on and on and on and on (~120
-                chars)</p>
-              </div>
-            </div>
-          </li>
-
-          <li data-video-id="1766325439001">
-            <div class="mediaBlock">
-              <img alt="" src="http://cdn.ttgtmedia.com/microsites/rimembracingmobilechaos2/images/Tip_174.jpg">
-
-              <div class="mediaBlockContent">
-                <h4 class="featuredVideoTitle">Tip #174: Don't Risk the Business Over Four Digits</h4>
-
-                <p class="featuredVideoSummary">a three line video summary that goes on and on and on and on and on and on and on and on and on and on (~120
-                chars)</p>
-              </div>
-            </div>
-          </li>
-
-          <li data-video-id="1745733539001">
-            <div class="mediaBlock">
-              <img alt="" src="http://cdn.ttgtmedia.com/microsites/rimembracingmobilechaos2/images/Tip_11.jpg">
-
-              <div class="mediaBlockContent">
-                <h4 class="featuredVideoTitle">Tip #11: Don't Pay the Price of Free Apps</h4>
-
-                <p class="featuredVideoSummary">a three line video summary that goes on and on and on and on and on and on and on and on and on and on (~120
-                chars)</p>
-              </div>
-            </div>
-          </li>
-
-          <li data-video-id="1730775741001">
-            <div class="mediaBlock">
-              <img alt="" src="http://cdn.ttgtmedia.com/microsites/rimembracingmobilechaos2/images/Tip_67_Mulitple%20Devices.jpg">
-
-              <div class="mediaBlockContent">
-                <h4 class="featuredVideoTitle">Tip #67: Multiple Devices Create Multiple Problems</h4>
-
-                <p class="featuredVideoSummary">a three line video summary that goes on and on and on and on and on and on and on and on and on and on (~120
-                chars)</p>
-              </div>
-            </div>
-          </li>
-
-          <li data-video-id="1727315889001">
-            <div class="mediaBlock">
-              <img alt="" src="http://cdn.ttgtmedia.com/microsites/rimembracingmobilechaos2/images/Tip_84.jpg">
-
-              <div class="mediaBlockContent">
-                <h4 class="featuredVideoTitle">Tip #84: Sloppiness is a choice. MDM isn't</h4>
-
-                <p class="featuredVideoSummary">a three line video summary that goes on and on and on and on and on and on and on and on and on and on (~120
-                chars)</p>
-              </div>
-            </div>
-          </li>
-
-          <li data-video-id="1711303860001">
-            <div class="mediaBlock">
-              <img alt="" src="http://cdn.ttgtmedia.com/microsites/rimembracingmobilechaos2/images/Tip_114.jpg">
-
-              <div class="mediaBlockContent">
-                <h4 class="featuredVideoTitle">Tip #114: They Can't Outrun MDM</h4>
-
-                <p class="featuredVideoSummary">a three line video summary that goes on and on and on and on and on and on and on and on and on and on (~120
-                chars)</p>
-              </div>
-            </div>
-          </li>
-
-          <li data-video-id="1697332157001">
-            <div class="mediaBlock">
-              <img alt="" src="http://cdn.ttgtmedia.com/microsites/rimembracingmobilechaos2/images/Tip_72.jpg">
-
-              <div class="mediaBlockContent">
-                <h4 class="featuredVideoTitle">Tip #72 Tee Up MDM for Secure Access, Anywhere</h4>
-
-                <p class="featuredVideoSummary">a three line video summary that goes on and on and on and on and on and on and on and on and on and on (~120
-                chars)</p>
-              </div>
-            </div>
-          </li>
-
-          <li data-video-id="1677122305001">
-            <div class="mediaBlock">
-              <img alt="" src="http://cdn.ttgtmedia.com/microsites/rimembracingmobilechaos2/images/Tip_336.jpg">
-
-              <div class="mediaBlockContent">
-                <h4 class="featuredVideoTitle">Tip #336: All QR Codes Aren't Created Equal, or Secure</h4>
-
-                <p class="featuredVideoSummary">a three line video summary that goes on and on and on and on and on and on and on and on and on and on (~120
-                chars)</p>
-              </div>
-            </div>
-          </li>
-
-          <li data-video-id="1643143173001">
-            <div class="mediaBlock">
-              <img alt="" src="http://cdn.ttgtmedia.com/microsites/rimembracingmobilechaos2/images/Tip_116.jpg">
-
-              <div class="mediaBlockContent">
-                <h4 class="featuredVideoTitle">Tip #116: Without Security, a Smartphone is a Megaphone</h4>
-
-                <p class="featuredVideoSummary">a three line video summary that goes on and on and on and on and on and on and on and on and on and on (~120
-                chars)</p>
-              </div>
-            </div>
-          </li>
-
-          <li data-video-id="1643104443001">
-            <div class="mediaBlock">
-              <img alt="" src="http://cdn.ttgtmedia.com/microsites/rimembracingmobilechaos2/images/Tip_471.jpg">
-
-              <div class="mediaBlockContent">
-                <h4 class="featuredVideoTitle">Tip #471: Blocking Attachments Isn't the Answer</h4>
-
-                <p class="featuredVideoSummary">a three line video summary that goes on and on and on and on and on and on and on and on and on and on (~120
-                chars)</p>
-              </div>
-            </div>
-          </li>
-
-          <li data-video-id="1643120878001">
-            <div class="mediaBlock">
-              <img alt="" src="http://cdn.ttgtmedia.com/microsites/rimembracingmobilechaos2/images/Tip_782.jpg">
-
-              <div class="mediaBlockContent">
-                <h4 class="featuredVideoTitle">Tip #782: Blocking App-by-App is Futile</h4>
-
-                <p class="featuredVideoSummary">a three line video summary that goes on and on and on and on and on and on and on and on and on and on (~120
-                chars)</p>
-              </div>
-            </div>
-          </li>
-
-          <li data-video-id="1643104441001">
-            <div class="mediaBlock">
-              <img alt="" src="http://cdn.ttgtmedia.com/microsites/rimembracingmobilechaos2/images/Tip_118.jpg">
-
-              <div class="mediaBlockContent">
-                <h4 class="featuredVideoTitle">Tip #118: It Doesn't Take a Wizard to Undermine Security</h4>
-
-                <p class="featuredVideoSummary">a three line video summary that goes on and on and on and on and on and on and on and on and on and on (~120
-                chars)</p>
-              </div>
-            </div>
-          </li>
-
-          <li data-video-id="1643120880001">
-            <div class="mediaBlock">
-              <img alt="" src="http://cdn.ttgtmedia.com/microsites/rimembracingmobilechaos2/images/Tip_297.jpg">
-
-              <div class="mediaBlockContent">
-                <h4 class="featuredVideoTitle">Tip #297: Secure Environments Come from Secure Back Ends</h4>
-
-                <p class="featuredVideoSummary">a three line video summary that goes on and on and on and on and on and on and on and on and on and on (~120
-                chars)</p>
-              </div>
-            </div>
-          </li>
-        </ul>
+            <div style="clear: both;"></div>
+          </div>
+          <div id="micrositeContentColumnFull">
+            <ol>
+              <li><a href="./index.html#videoId=1834784326001">Tip #71: Not all Applications are Created Equal</a></li>
+              <li><a href="./index.html#videoId=1832858263001">Tip #3: A Lost Phone is no Reason to Panic</a></li>
+              <li><a href="./index.html#videoId=1832858253001">Tip #49: Picture ID Not Required When Using MDM Software</a></li>
+              <li><a href="./index.html#videoId=1828362629001">Tip #75: Don't Treat Lucky Caller #7 Like a Security Threat</a></li>
+              <li><a href="./index.html#videoId=1785579854001">Tip #28: Human Device Lock</a></li>
+              <li><a href="./index.html#videoId=1785590334001">Tip #111: An Unprotected Cell Phone is a Huge Risk. A Brick Isn't</a></li>
+              <li><a href="./index.html#videoId=1785136996001">Tip #98: It Always Starts With Just One Request</a></li>
+              <li><a href="./index.html#videoId=1768317771001">Tip #131: No Device- Personal or Work- Operates When Wet</a></li>
+              <li><a href="./index.html#videoId=1766325439001">Tip #174: Don't Risk the Business Over Four Digits</a></li>
+              <li><a href="./index.html#videoId=1745733539001">Tip #11: Don't Pay the Price of Free Apps</a></li>
+              <li><a href="./index.html#videoId=1730775741001">Tip #67: Multiple Devices Create Multiple Problems</a></li>
+              <li><a href="./index.html#videoId=1727315889001">Tip #84: Sloppiness is a choice. MDM isn't</a></li>
+              <li><a href="./index.html#videoId=1711303860001">Tip #114: They Can't Outrun MDM</a></li>
+              <li><a href="./index.html#videoId=1697332157001">Tip #72 Tee Up MDM for Secure Access, Anywhere</a></li>
+              <li><a href="./index.html#videoId=1677122305001">Tip #336: All QR Codes Aren't Created Equal, or Secure</a></li>
+              <li><a href="./index.html#videoId=1643143173001">Tip #116: Without Security, a Smartphone is a Megaphone</a></li>
+              <li><a href="./index.html#videoId=1643104443001">Tip #471: Blocking Attachments Isn't the Answer</a></li>
+              <li><a href="./index.html#videoId=1643120878001">Tip #782: Blocking App-by-App is Futile</a></li>
+              <li><a href="./index.html#videoId=1643104441001">Tip #118: It Doesn't Take a Wizard to Undermine Security</a></li>
+            </ol>
+          </div>
+          <div id="micrositeFooter">
+            <h2>Footer</h2>
+          </div>
+        </div>
       </div>
     </div>
-
-
-
-  </div>
-
-  <div id="micrositeContentColumnFull">
-    <ol>
-      <li><a href="./index.html#videoId=1834784326001">Tip #71: Not all Applications are Created Equal</a></li>
-      <li><a href="./index.html#videoId=1832858263001">Tip #3: A Lost Phone is no Reason to Panic</a></li>
-      <li><a href="./index.html#videoId=1832858253001">Tip #49: Picture ID Not Required When Using MDM Software</a></li>
-      <li><a href="./index.html#videoId=1828362629001">Tip #75: Don't Treat Lucky Caller #7 Like a Security Threat</a></li>
-      <li><a href="./index.html#videoId=1785579854001">Tip #28: Human Device Lock</a></li>
-      <li><a href="./index.html#videoId=1785590334001">Tip #111: An Unprotected Cell Phone is a Huge Risk. A Brick Isn't</a></li>
-      <li><a href="./index.html#videoId=1785136996001">Tip #98: It Always Starts With Just One Request</a></li>
-      <li><a href="./index.html#videoId=1768317771001">Tip #131: No Device- Personal or Work- Operates When Wet</a></li>
-      <li><a href="./index.html#videoId=1766325439001">Tip #174: Don't Risk the Business Over Four Digits</a></li>
-      <li><a href="./index.html#videoId=1745733539001">Tip #11: Don't Pay the Price of Free Apps</a></li>
-      <li><a href="./index.html#videoId=1730775741001">Tip #67: Multiple Devices Create Multiple Problems</a></li>
-      <li><a href="./index.html#videoId=1727315889001">Tip #84: Sloppiness is a choice. MDM isn't</a></li>
-      <li><a href="./index.html#videoId=1711303860001">Tip #114: They Can't Outrun MDM</a></li>
-      <li><a href="./index.html#videoId=1697332157001">Tip #72 Tee Up MDM for Secure Access, Anywhere</a></li>
-      <li><a href="./index.html#videoId=1677122305001">Tip #336: All QR Codes Aren't Created Equal, or Secure</a></li>
-      <li><a href="./index.html#videoId=1643143173001">Tip #116: Without Security, a Smartphone is a Megaphone</a></li>
-      <li><a href="./index.html#videoId=1643104443001">Tip #471: Blocking Attachments Isn't the Answer</a></li>
-      <li><a href="./index.html#videoId=1643120878001">Tip #782: Blocking App-by-App is Futile</a></li>
-      <li><a href="./index.html#videoId=1643104441001">Tip #118: It Doesn't Take a Wizard to Undermine Security</a></li>
-    </ol>
-  </div>
-
-  <div id="micrositeFooter">
-
-    <h2>Footer</h2>
-
-  </div>
-
-</div>
-</div>
-</div>
-</body>
+  </body>
 </html>
