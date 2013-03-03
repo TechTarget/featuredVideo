@@ -1,5 +1,5 @@
 /*!
-* Featured Video v1.1.3 (http://okize.github.com/)
+* Featured Video v1.1.4 (http://okize.github.com/)
 * Copyright (c) 2013 | Licensed under the MIT license - http://www.opensource.org/licenses/mit-license.php
 */
 
@@ -20,6 +20,7 @@
   var pluginName = 'featuredVideo';
   var defaults = {
     autoplayFirstVideo: true, // play the first video automagically as soon as it's loaded
+    defaultVideoId: false, // if set, this will be the first video that appear in player, regardless of playlist
     supportsDeepLinking: true, // supports appending videoId in url hash to link to any video in playlist
     showPlaylist: true, // show a playlist alongside the video player
     showPlaylistTooltips: true, // show 'tooltips' of the video summary inside the playlist
@@ -29,7 +30,16 @@
   // plugin constructor
   var Video = function (element, options) {
     this.el = element;
+    this.$element = $(this.el); // featured video component dom container
     this.options = $.extend({}, defaults, options);
+    this.activeVideoId = 0; // stores the video id of the video in the player
+    this.hashVideoId = this.getVideoIdFromUrl(); // get video id from url hash
+    this.player = this.$element.find('.featuredplayer'); // the video player dom element
+    this.playlist = this.$element.find('.featuredVideoPlaylist'); // the playlist dom element
+    this.playlistVideos = this.playlist.find('li'); // each video item in the playlist
+    this.playlistVideosCount = this.playlistVideos.length; // count of videos in the playlist
+    this.playlistFirstVideoId = this.playlistVideos.eq(0).data('videoId') || null; // id of first video in playlist
+    this.playOnHashChange = true; // @todo
     this.init();
   };
 
@@ -37,24 +47,8 @@
 
     init: function() {
 
-      this.$element = $(this.el); // featured video component dom container
-      this.activeVideoId = 0; // stores the video id of the video in the player
-      this.hashVideoId = this.getVideoIdFromUrl(); // get video id from url hash
-      this.player = this.$element.find('.featuredplayer'); // the video player dom element
-      this.playlist = this.$element.find('.featuredVideoPlaylist'); // the playlist dom element
-      this.playlistVideos = this.playlist.find('li'); // each video item in the playlist
-      this.playlistVideosCount = this.playlistVideos.length; // count of videos in the playlist
-      this.playlistFirstVideoId = this.playlistVideos.eq(0).data('videoId'); // id of first video in playlist
-
       // @todo
-      this.playOnHashChange = true;
-
-      // make sure there is at least one video in the playlist AND it has a video id
-      if (this.playlistVideosCount <= 0 || (this.playlistVideosCount === 1 && this.playlistFirstVideoId === '') ) {
-        this.$element.hide();
-        $.error('no video ids specified in playlist');
-        return;
-      }
+      this.sanityCheck();
 
       // @todo should we move this into playlist functionality?
       if (this.options.supportsDeepLinking) {
@@ -67,6 +61,24 @@
     },
 
     player: {}, // this will hold the api that brightcove returns
+
+    sanityCheck: function () {
+
+      // make sure there is at least one video in the playlist AND it has a video id
+      if (this.playlistVideosCount <= 0 || (!this.playlistFirstVideoId || this.playlistFirstVideoId === '') ) {
+        this.$element.hide();
+        // @todo maybe instead of critical error it should just disable playlist?
+        return $.error('no video ids specified in featured video playlist!');
+      }
+
+      // make sure that there are no duplicate ids in playlist array
+      // if there are, remove from dom
+      var dedupe = this.getDuplicatePlaylistIds();
+      if (dedupe.length > 0) {
+        console.error('WARNING! duplicate ids found in the featured video playlist: ', dedupe);
+      }
+
+    },
 
     getPlayer: function () {
 
@@ -327,6 +339,29 @@
       });
 
       return arr;
+
+    },
+
+    getDuplicatePlaylistIds: function () {
+
+      var ids = this.getPlaylistIds(),
+          duplicates = [],
+          collection = {},
+          key;
+
+      for (var i = 0, len = ids.length; i < len; i++) {
+
+        key = ids[i].toString();
+
+        if (typeof collection[key] === 'undefined') {
+          collection[key] = true;
+        } else {
+          duplicates.push(key);
+        }
+
+      }
+
+      return duplicates;
 
     },
 
