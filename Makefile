@@ -21,6 +21,13 @@ endef
 
 default:
 
+	@echo "* compiling jade templates"
+	@jade -P ./example/index.jade
+	@jade -P ./example/multiplePlayers.jade
+
+	@echo "* compiling sass..."
+	@sass ./example/sass/main.scss ./example/style.css
+
 	@echo "* linting..."
 	@jshint ${SCRIPT_NAME}.js --show-non-errors
 
