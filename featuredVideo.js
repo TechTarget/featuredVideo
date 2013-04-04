@@ -131,7 +131,7 @@
       // the player has now been fully instantiated and
       // is ready to interact with via the API
       // only call methods of the API modules after the template ready event has fired
-      window.brightcovePlayerReady = function () {
+      window.brightcovePlayerReady = function (e) {
 
         // @todo need to determine if autoplay is appropriate
         // for example: if user is on this page and clicks, it should play automatically
