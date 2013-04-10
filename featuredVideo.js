@@ -32,13 +32,14 @@
     this.el = element;
     this.$element = $(this.el); // featured video component dom container
     this.options = $.extend({}, defaults, options);
-    this.activeVideoId = 0; // stores the video id of the video in the player
+    this.activeVideoId = null; // stores the video id of the video in the player
     this.hashVideoId = this.getVideoIdFromUrl(); // get video id from url hash
     this.player = this.$element.find('.featuredplayer'); // the video player dom element
     this.playlist = this.$element.find('.featuredVideoPlaylist'); // the playlist dom element
     this.playlistVideos = this.playlist.find('li'); // each video item in the playlist
     this.playlistVideosCount = this.playlistVideos.length; // count of videos in the playlist
-    this.playlistFirstVideoId = this.playlistVideos.eq(0).data('videoId') || null; // id of first video in playlist
+    this.playlistFirstVideoEl = this.playlistVideos.eq(0); // first video element in playlist
+    this.playlistFirstVideoId = this.playlistFirstVideoEl.data('videoId') || null; // id of first video in playlist
     this.playOnHashChange = true; // @todo
     this.init();
   };
@@ -131,7 +132,7 @@
       // the player has now been fully instantiated and
       // is ready to interact with via the API
       // only call methods of the API modules after the template ready event has fired
-      window.brightcovePlayerReady = function (e) {
+      window.brightcovePlayerReady = function () {
 
         // @todo need to determine if autoplay is appropriate
         // for example: if user is on this page and clicks, it should play automatically
@@ -180,9 +181,7 @@
       // check if there was a video id set in url hash
       // and check that videoid is a valid id inside the playlist
       else if (this.hashVideoId && this.hasValidId(this.hashVideoId)) {
-
         this.activeVideoId = this.hashVideoId;
-
       }
 
       // otherwise use the id of the first video in the playlist
@@ -196,12 +195,14 @@
 
     hasValidId: function (videoId) {
 
-      // check that the passed video id exists in the playlist
       var idList = this.getPlaylistIds();
 
+      // check that the video id arg exists in the playlist
       // ie7/8 does not support array.indexOf
-      if ( idList.indexOf(videoId) >= 0) {
-        return true;
+      for (var i = 0, len = idList.length; i < len; i++) {
+        if (idList[i] === videoId) {
+          return true;
+        }
       }
 
       return false;
@@ -231,6 +232,9 @@
     },
 
     bringPlaylistItemIntoView: function (el) {
+
+      // if there's no el, just make it the first video
+      if (typeof el === 'undefined') { return false; }
 
       // use scrollIntoViewIfNeeded if available, else fallback to scrollIntoView
       if (el.scrollIntoViewIfNeeded) {
