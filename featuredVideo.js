@@ -1,5 +1,5 @@
 /*!
-* Featured Video v1.1.4 (http://okize.github.com/)
+* Featured Video v1.0.5 (http://okize.github.com/)
 * Copyright (c) 2013 | Licensed under the MIT license - http://www.opensource.org/licenses/mit-license.php
 */
 
