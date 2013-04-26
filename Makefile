@@ -1,5 +1,4 @@
-# LINT & MINIFY
-# jshint (>=0.9) & uglifyjs (>=2.2) are required
+# Required npm modules: jshint (1.1.x), uglifyjs (2.2.x) & coffeelint (0.5.x)
 
 SCRIPT_NAME = featuredVideo
 FILESIZE_MAX = 2000
@@ -20,9 +19,20 @@ define FILESIZE_CHECK
 endef
 
 default:
+	@echo "* compiling jade templates"
+	@jade -P ./example/index.jade
 
-	@echo "* linting..."
-	@jshint ${SCRIPT_NAME}.js --show-non-errors
+	@echo "* compiling sass..."
+	@sass --scss --compass --style expanded ./example/sass/style.scss ./example/css/style.css
+
+	@echo "* linting coffeescript..."
+	@coffeelint ${SCRIPT_NAME}.coffee
+
+	@echo "* compiling coffeescript..."
+	@coffee -p -l ${SCRIPT_NAME}.coffee > ${SCRIPT_NAME}.js
+
+	# @echo "* linting javascript..."
+	# @jshint ${SCRIPT_NAME}.js --show-non-errors
 
 	@echo "* minifying..."
 	@uglifyjs ${SCRIPT_NAME}.js \
@@ -34,14 +44,3 @@ default:
 
 	@echo "* gzip test..."
 	@$(FILESIZE_CHECK)
-
-compile:
-
-	@echo "* compiling jade templates"
-	@jade -P ./example/index.jade
-
-	@echo "* compiling sass..."
-	@sass ./example/sass/screen.scss ./example/css/screen.css
-
-	#@echo "* compiling coffeescript..."
-	#@coffee -p ${SCRIPT_NAME}.coffee > ${SCRIPT_NAME}.js

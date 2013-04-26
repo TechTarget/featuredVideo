@@ -1,6 +1,6 @@
 $(document).on('ready', function() {
 
-  // init plugin
+  // init featuredVideo component
   $('.featuredVideo').featuredVideo({
     autoplayFirstVideo: false,
     supportsDeepLinking: true,
