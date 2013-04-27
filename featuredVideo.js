@@ -22,7 +22,6 @@ http://www.opensource.org/licenses/mit-license.php
     pluginName = 'featuredVideo';
     defaults = {
       autoplayFirstVideo: true,
-      defaultVideoId: false,
       supportsDeepLinking: true,
       showPlaylist: true,
       showPlaylistTooltips: true,
@@ -38,13 +37,12 @@ http://www.opensource.org/licenses/mit-license.php
         this.playlist = this.el.find('.featuredVideoPlaylist');
         this.playlistVideos = this.playlist.find('li');
         this.playlistVideosCount = this.playlistVideos.length;
-        this.playlistFirstVideoEl = this.playlistVideos.eq(0);
-        this.playlistFirstVideoId = this.playlistFirstVideoEl.data('videoId') || null;
+        this.playlistFirstVideoId = this.playlistVideos.eq(0).data('videoId') || null;
         this.stateKey = 'videoId';
-        this.hashVideoId = this.getVideoIdFromUrl();
         this.activeVideoId = null;
         this.hashObject = null;
         this.playOnHashChange = true;
+        this.hashVideoId = this.getVideoIdFromUrl();
         this.init();
       }
 
@@ -52,8 +50,6 @@ http://www.opensource.org/licenses/mit-license.php
         this.sanityCheck();
         return this.getPlayer();
       };
-
-      Video.prototype.player = {};
 
       Video.prototype.sanityCheck = function() {
         var duplicateIds;
@@ -66,6 +62,8 @@ http://www.opensource.org/licenses/mit-license.php
           return console.error('WARNING! duplicate ids found in the featured video playlist: ', duplicateIds);
         }
       };
+
+      Video.prototype.player = {};
 
       Video.prototype.getPlayer = function() {
         var playerScript, playerScriptIsLoaded,
@@ -102,31 +100,23 @@ http://www.opensource.org/licenses/mit-license.php
         window.brightcovePlayerReady = function() {
           var playType;
           playType = (_this.options.autoplayFirstVideo ? 'load' : 'cue');
-          _this.playVideo(playType, _this.getVideoId());
+          _this.playVideo(playType, _this.getVideo());
           return _this.initializePlaylist();
         };
         return brightcove.createExperiences();
       };
 
-      Video.prototype.playVideo = function(playType, videoId, eventType) {
-        if (typeof eventType === 'undefined') {
-          eventType = 'none';
-        }
+      Video.prototype.playVideo = function(playType, videoId) {
         if (playType === 'load') {
-          this.player.loadVideoByID(videoId);
-        } else {
-          if (playType === 'cue') {
-            this.player.cueVideoByID(videoId);
-          }
-        }
-        if (this.options.showPlaylist) {
-          return this.activatePlaylistItem(void 0, eventType);
+          return this.player.loadVideoByID(videoId);
+        } else if (playType === 'cue') {
+          return this.player.cueVideoByID(videoId);
         }
       };
 
-      Video.prototype.getVideoId = function(el) {
+      Video.prototype.getVideo = function(el) {
         if (typeof el !== 'undefined') {
-          this.activeVideoId = el.data('videoId');
+          this.activeVideoId = $(el).data('videoId');
         } else if (this.hashVideoId && this.hasValidId(this.hashVideoId)) {
           this.activeVideoId = this.hashVideoId;
         } else {
@@ -149,7 +139,7 @@ http://www.opensource.org/licenses/mit-license.php
         return false;
       };
 
-      Video.prototype.activatePlaylistItem = function($el, eventType) {
+      Video.prototype.selectPlaylistItem = function($el, eventType) {
         if (typeof $el === 'undefined') {
           $el = this.playlist.find('li[data-video-id=' + this.activeVideoId + ']');
         }
@@ -178,17 +168,9 @@ http://www.opensource.org/licenses/mit-license.php
           this.el.addClass('noPlaylist');
           return;
         }
-        if (this.options.supportsDeepLinking) {
-          this.initializeHashLinking();
-        }
         this.playlist.on('click', 'li', function(e) {
-          var videoId;
           e.preventDefault();
-          videoId = $(e.currentTarget).data('videoId');
-          _this.updateUrlHash(videoId);
-          _this.activeVideoId = videoId;
-          _this.playOnHashChange = false;
-          return _this.playVideo('load', videoId, e.type);
+          return _this.updateState(_this.getVideo(e.currentTarget), e);
         });
         if (this.options.showPlaylistTooltips) {
           this.initializePlaylistTooltips();
@@ -250,19 +232,19 @@ http://www.opensource.org/licenses/mit-license.php
         return duplicates;
       };
 
-      Video.prototype.initializeHashLinking = function() {
-        var _this = this;
-        if ('onhashchange' in window) {
-          return $(window).on('hashchange', function(e) {
-            console.log('hash changed');
-            e.preventDefault();
-            if (_this.playOnHashChange) {
-              _this.activeVideoId = _this.getVideoIdFromUrl();
-              _this.playVideo('load', _this.activeVideoId);
-            }
-            return _this.playOnHashChange = true;
-          });
+      Video.prototype.initializeHashLinking = function() {};
+
+      Video.prototype.getStateFromHash = function() {
+        var state, _ref;
+        this.hashObject = this.getHashObject();
+        if (!this.hashObject) {
+          return null;
         }
+        state = (_ref = this.hashObject[this.stateKey]) != null ? _ref : null;
+        if (!state) {
+          return null;
+        }
+        return this.activeTab = this.hashObject[this.stateKey];
       };
 
       Video.prototype.updateUrlHash = function(videoId) {
@@ -335,6 +317,17 @@ http://www.opensource.org/licenses/mit-license.php
 
       Video.prototype.setUrlHash = function(hash) {
         return window.location.hash = hash;
+      };
+
+      Video.prototype.updateState = function(videoId, e) {
+        var eventType, item;
+        this.activeVideoId = videoId;
+        this.playVideo('load', videoId);
+        if (this.options.showPlaylist) {
+          item = e.currentTarget ? $(e.currentTarget) : void 0;
+          eventType = e.type ? e.type : 'none';
+          return this.selectPlaylistItem(item, eventType);
+        }
       };
 
       return Video;
