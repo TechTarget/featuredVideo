@@ -1,5 +1,5 @@
 ###!
-featuredVideo v1.0.6 (http://okize.github.com/)
+featuredVideo v1.1.4 (http://okize.github.com/)
 Copyright (c) 2013 | Licensed under the MIT license
 http://www.opensource.org/licenses/mit-license.php
 ###
@@ -21,7 +21,7 @@ http://www.opensource.org/licenses/mit-license.php
   # default plugin options
   defaults =
     autoplayFirstVideo: true # play the first video automagically as soon as it's loaded
-    supportsDeepLinking: true # supports appending videoId in url hash to link to any video in playlist
+    maintainState: true # supports appending videoId in url hash to link to any video in playlist
     showPlaylist: true # show a playlist alongside the video player
     showPlaylistTooltips: true # show 'tooltips' of the video summary inside the playlist
     tooltipHtml: '<div class="featuredVideoPlaylistTooltip"></div>' # html for dom element of tooltip
@@ -38,13 +38,11 @@ http://www.opensource.org/licenses/mit-license.php
       @playlistVideos = @playlist.find('li') # each video item in the playlist
       @playlistVideosCount = @playlistVideos.length # count of videos in the playlist
       @playlistFirstVideoId = @playlistVideos.eq(0).data('videoId') or null # id of first video in playlist
-      @stateKey = 'videoId'
+      @playType = if @options.autoplayFirstVideo then 'load' else 'cue' # set the playType based on user option
+      @stateKey = 'videoId' # string to use for the url hash state maintenance
       @activeVideoId = null # stores the video id of the video currently in the player
+      @hashVideoId = @getIdFromUrl() # get video id from url hash
       @hashObject = null
-
-      @playOnHashChange = true
-      @hashVideoId = @getVideoIdFromUrl() # get video id from url hash
-
       @init()
 
     # plugin initializer
@@ -56,20 +54,27 @@ http://www.opensource.org/licenses/mit-license.php
       # initialize video player
       @getPlayer()
 
+      # initialize video playing from in-page links
+      @watchHash()
+
     # checks to make sure a few critical pieces of information are being supplied
     # in the html before trying to render the video component
     sanityCheck: ->
 
-      # make sure there is at least one video in the playlist AND it has a video id
-      # if not, hide the video player and return a critical error
-      if @playlistVideosCount <= 0 or (not @playlistFirstVideoId or @playlistFirstVideoId is '')
+      # make sure there is at least one video in the playlist
+      if @playlistVideosCount <= 0
         @el.hide()
-        return $.error('no video ids specified in featured video playlist!')
+        return $.error('no videos in the playlist!')
+
+      # make sure at least the first video has an id
+      if (not @playlistFirstVideoId or @playlistFirstVideoId is '')
+        @el.hide()
+        return $.error('no video ids specified in playlist!')
 
       # make sure that there are no duplicate ids in playlist array
       duplicateIds = @getDuplicatePlaylistIds()
-      if duplicateIds.length > 0
-        console.error('WARNING! duplicate ids found in the featured video playlist: ', duplicateIds)
+      if duplicateIds.length > 0 && typeof console == 'object'
+        console.error('WARNING! duplicate ids found in the playlist: ', duplicateIds)
 
     # this will hold the api object that brightcove returns
     player: {}
@@ -100,7 +105,7 @@ http://www.opensource.org/licenses/mit-license.php
       )
       playerScriptIsLoaded
 
-    # @todo
+    # inits the player when it's ready
     initializePlayer: ->
 
       # brightcove object
@@ -117,12 +122,8 @@ http://www.opensource.org/licenses/mit-license.php
       # only call methods of the API modules after the template ready event has fired
       window.brightcovePlayerReady = =>
 
-        # @todo need to determine if autoplay is appropriate
-        # for example: if user is on this page and clicks, it should play automatically
-        playType = (if (@options.autoplayFirstVideo) then 'load' else 'cue')
-
-        # add video to player
-        @playVideo(playType, @getVideo())
+        # add video to player (3rd arg is an event object)
+        @updateState(@getVideo(), @playType, undefined)
 
         # now can initialize the playlist to interact with the player
         @initializePlaylist()
@@ -130,10 +131,9 @@ http://www.opensource.org/licenses/mit-license.php
       # no idea what this does, but if it's not here FF & IE9 won't work... go figure
       brightcove.createExperiences()
 
-    # @todo
+    # loads video into player by play type (load or cue)
     playVideo: (playType, videoId) ->
 
-      # @todo should check how user arrived to page for accurate playType
       if playType is 'load'
         @player.loadVideoByID(videoId)
       else if playType is 'cue'
@@ -158,12 +158,11 @@ http://www.opensource.org/licenses/mit-license.php
       # return videoId
       @activeVideoId
 
-    # @todo
+    # check that the video id arg exists in the playlist
     hasValidId: (videoId) ->
 
       idList = @getPlaylistIds()
 
-      # check that the video id arg exists in the playlist
       # ie7/8 does not support array.indexOf
       i = 0
       len = idList.length
@@ -191,7 +190,7 @@ http://www.opensource.org/licenses/mit-license.php
       # apply class to active element
       $el.addClass('active')
 
-    # @todo
+    # this will bring the video into view inside the playlist
     bringPlaylistItemIntoView: (el) ->
 
       # if there's no el, just make it the first video
@@ -203,20 +202,19 @@ http://www.opensource.org/licenses/mit-license.php
       else
         el.scrollIntoView(true)
 
-    # @todo
+    # if playlist is not enabled, add a class to component, remove playlist
+    # from dom and exit, otherwise initialize the playlist
     initializePlaylist: ->
 
-      # if playlist is not enabled, add a class to component, remove playlist
-      # from dom and exit, otherwise initialize the playlist
       unless @options.showPlaylist
-        @playlist.remove()
         @el.addClass 'noPlaylist'
+        @playlist.remove()
         return
 
       # event handler for playlist clicks
       @playlist.on 'click', 'li', (e) =>
         e.preventDefault()
-        @updateState(@getVideo(e.currentTarget), e)
+        @updateState(@getVideo(e.currentTarget), 'load', e)
 
       # if video tooltips are enabled, initialize them
       @initializePlaylistTooltips() if @options.showPlaylistTooltips
@@ -224,7 +222,7 @@ http://www.opensource.org/licenses/mit-license.php
       # show the playlist
       @playlist.css('visibility', 'visible')
 
-    # @todo
+    # 'tooltips' that display summary of video
     initializePlaylistTooltips: ->
 
       # dom element that contains 'tooltip'
@@ -281,25 +279,21 @@ http://www.opensource.org/licenses/mit-license.php
         i++
       duplicates
 
-    # @todo
-    initializeHashLinking: ->
+    # allows in-page links to update the video by passing video ids through hash in url
+    watchHash: ->
 
       # bind to hash
-      # if 'onhashchange' of window
-      #   $(window).on 'hashchange', (e) =>
+      if 'onhashchange' of window
+        $(window).on 'hashchange', (e) =>
 
-      #     console.log('hash changed')
+          e.preventDefault()
 
-      #     e.preventDefault()
-
-      #     # @todo this kludge needs to be fixed
-      #     if @playOnHashChange
-      #       @activeVideoId = @getVideoIdFromUrl()
-      #       @playVideo 'load', @activeVideoId
-
-      #     # set this back to true
-      #     @playOnHashChange = true
-
+          id = @getIdFromUrl()
+          if id is undefined or id == @hashObject[@stateKey]
+            return
+          else
+            @hashVideoId = @activeVideoId = id
+            @updateState(@getVideo(), 'load', undefined)
 
     # checks if there's a hash for video player state maintenance
     # if there is, set activeVideo var to hash state
@@ -314,26 +308,8 @@ http://www.opensource.org/licenses/mit-license.php
     # update url hash with current video id
     updateUrlHash: (videoId) ->
 
-      window.location.hash = 'videoId=' + videoId if @options.supportsDeepLinking
+      window.location.hash = 'videoId=' + videoId if @options.maintainState
 
-    # @todo
-    getVideoIdFromUrl: ->
-
-      obj = @getHashObject()
-
-      # if an object is returned set videoId to @stateKey in obj
-      if obj?
-        videoId = obj[@stateKey]
-
-      # if there's no hash object, also check for videoId in query string
-      else
-        videoId = @getVideoIdFromQueryString()
-
-      # even if a hash object is returned, @stateKey
-      if typeof videoId is 'undefined' or videoId is ''
-        videoId = null
-
-      videoId
 
     # returns the hash from the current window or null
     getUrlHash: ->
@@ -355,10 +331,29 @@ http://www.opensource.org/licenses/mit-license.php
           args[arg[0]] = undefined
       args
 
+    # attempts to return a video id that was passed in the url
+    getIdFromUrl: ->
+
+      obj = @getHashObject()
+
+      # if an object is returned set videoId to @stateKey in obj
+      if obj?
+        videoId = obj[@stateKey]
+
+      # if there's no hash object, also check for videoId in query string
+      else
+        videoId = @getIdFromQueryString()
+
+      # a hash object could be returned with no id
+      if typeof videoId is 'undefined' or videoId is ''
+        videoId = null
+
+      videoId
+
     # edge-case where url may be loaded with a query string that contains a video id param
     # example: ?bcpid=2117382598001&bckey=AQ~~,AAAAAFGE4wo~,g57wOIK2TXKMBHTPnffWcp0t79yQC9T_&bctid=1897188942001
     # this function is a fallback that will return the video id from that string
-    getVideoIdFromQueryString: ->
+    getIdFromQueryString: ->
 
       match = window.location.search.match(new RegExp('[?&]' + 'bctid' + '=([^&]+)(&|$)'))
       return match && decodeURIComponent(match[1].replace(/\+/g, ' '))
@@ -390,17 +385,21 @@ http://www.opensource.org/licenses/mit-license.php
       window.location.hash = hash
 
     # updates the state of the component
-    updateState: (videoId, e) ->
+    updateState: (videoId, playType, e) ->
 
       @activeVideoId = videoId
 
+      # update url hash
+      if @options.maintainState
+        @updateHash(@activeVideoId)
+
       # play the selected video
-      @playVideo('load', videoId)
+      @playVideo(playType, videoId)
 
       # if showing a playlist, 'select' the correct video in the list
       if @options.showPlaylist
-        item = if e.currentTarget then $(e.currentTarget) else undefined
-        eventType = if e.type then e.type else 'none'
+        item = if e and e.currentTarget then $(e.currentTarget) else undefined
+        eventType = if e and e.type then e.type else 'none'
         @selectPlaylistItem(item, eventType)
 
   # lightweight wrapper around the constructor that prevents multiple instantiations
