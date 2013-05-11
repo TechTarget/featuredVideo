@@ -1,37 +1,37 @@
+// compass imports
 @import "compass/utilities/general/clearfix";
 @import "compass/css3/box-shadow";
 
 // component customization
-$component-border-color: #444;
-$player-height: 360px;
-$player-width: 640px;
-$player-background-color: #000;
-$playlist-height: $player-height + 20px;
-$playlist-width: 280px;
-$playlist-background-color: #ececec;
-$playlist-header-color: #fff;
-$playlist-header-background-color: #444;
-$playlist-header-size: 16px;
-$playlist-item-size: 12px;
-$playlist-item-color: #000;
-$playlist-item-background-color: #fff;
-$playlist-item-border-color: #ccc;
-$playlist-item-active-border-color: #2ba6cb;
+$fv-border-color: #dedede;
+$fv-player-height: 360px;
+$fv-player-width: 640px;
+$fv-player-background-color: #000;
+$fv-playlist-height: $fv-player-height + 20px;
+$fv-playlist-width: 280px;
+$fv-playlist-background-color: #ececec;
+$fv-playlist-header-color: #fff;
+$fv-playlist-header-background-color: #666;
+$fv-playlist-header-size: 13px;
+$fv-playlist-item-size: 12px;
+$fv-playlist-item-color: #000;
+$fv-playlist-item-background-color: #fff;
+$fv-playlist-item-border-color: #ccc;
+$fv-playlist-item-active-border-color: #19527f;
 
-// featured video component
 .featuredVideo {
-  border: 1px solid $component-border-color;
+  border: 1px solid $fv-border-color;
   margin: 0 0 25px;
   padding: 10px 0 10px 10px;
   position: relative;
   @include clearfix;
 
   .featuredVideoPlayer {
-    background-color: $player-background-color;
+    background-color: $fv-player-background-color;
     float: left;
-    height: $player-height;
+    height: $fv-player-height;
     position: relative;
-    width: $player-width;
+    width: $fv-player-width;
   }
 
   &.noPlaylist .featuredVideoPlayer {
@@ -40,21 +40,21 @@ $playlist-item-active-border-color: #2ba6cb;
   }
 
   .featuredVideoPlaylist {
-    background-color: $playlist-background-color;
+    background-color: $fv-playlist-background-color;
     float: right;
-    height: $playlist-height;
+    height: $fv-playlist-height;
     margin: -10px 0;
     overflow-y: scroll;
     overflow-x: hidden;
     visibility: hidden;
-    width: $playlist-width;
+    width: $fv-playlist-width;
 
     .featuredVideoPlaylistHeader {
-      color: $playlist-header-color;
-      background-color: $playlist-header-background-color;
-      font-size: $playlist-header-size;
+      color: $fv-playlist-header-color;
+      background-color: $fv-playlist-header-background-color;
+      font-size: $fv-playlist-header-size !important;
       font-weight: normal;
-      padding: 3px 8px !important;
+      padding: 4px 8px !important;
       margin: 0 !important;
     }
 
@@ -65,20 +65,20 @@ $playlist-item-active-border-color: #2ba6cb;
 
       li {
         cursor: pointer;
-        background-color: $playlist-item-background-color;
+        background-color: $fv-playlist-item-background-color;
         min-height: 66px;
         margin-bottom: 2px;
-        border-left: 6px solid $playlist-item-border-color;
-        &.active { border-left: 6px solid $playlist-item-active-border-color; }
+        border-left: 6px solid $fv-playlist-item-border-color;
+        &.active { border-left: 6px solid $fv-playlist-item-active-border-color; }
       }
 
     }
 
     .featuredVideoTitle {
-      font-size: $playlist-item-size;
+      font-size: $fv-playlist-item-size;
       margin: 0 !important;
       line-height: 1.3 !important;
-      color: $playlist-item-color;
+      color: $fv-playlist-item-color;
       font-weight: normal;
     }
 
@@ -114,7 +114,7 @@ $playlist-item-active-border-color: #2ba6cb;
     border: 1px solid #444;
     background-color: #fff;
     position: absolute;
-    right: 288px;
+    right: $fv-playlist-width + 8;
     top: 0;
     min-height: 48px;
     width: 250px;
