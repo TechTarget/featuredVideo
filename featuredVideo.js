@@ -1,5 +1,6 @@
 /*!
-featuredVideo v1.1.8 (http://okize.github.com/)
+featuredVideo v1.1.8 (https://github.com/TechTarget/featuredVideo)
+Author: Morgan Wigmanich <okize123@gmail.com> (http://github.com/okize)
 Copyright (c) 2013 | Licensed under the MIT license
 http://www.opensource.org/licenses/mit-license.php
 */
@@ -15,7 +16,6 @@ http://www.opensource.org/licenses/mit-license.php
   })(function($) {
     'use strict';
     var Video, defaults, pluginName;
-
     pluginName = 'featuredVideo';
     defaults = {
       autoplayFirstVideo: true,
@@ -50,7 +50,6 @@ http://www.opensource.org/licenses/mit-license.php
 
       Video.prototype.sanityCheck = function() {
         var duplicateIds;
-
         if (this.playlistVideosCount <= 0) {
           this.el.hide();
           return $.error('no videos in the playlist!');
@@ -70,7 +69,6 @@ http://www.opensource.org/licenses/mit-license.php
       Video.prototype.getPlayer = function() {
         var playerScript, playerScriptIsLoaded,
           _this = this;
-
         playerScript = {
           url: 'http://admin.brightcove.com/js/BrightcoveExperiences.js',
           isLoaded: $(document).data('playerScriptLoaded') || false
@@ -85,7 +83,6 @@ http://www.opensource.org/licenses/mit-license.php
 
       Video.prototype.loadPlayerScript = function(url) {
         var playerScriptIsLoaded;
-
         playerScriptIsLoaded = $.ajax(url, {
           dataType: 'script'
         });
@@ -95,11 +92,9 @@ http://www.opensource.org/licenses/mit-license.php
       Video.prototype.initializePlayer = function() {
         var brightcove,
           _this = this;
-
         brightcove = window.brightcove || {};
         window.brightcovePlayerLoaded = function(brightcovePlayerId) {
           var brightcoveExp;
-
           brightcoveExp = brightcove.api.getExperience(brightcovePlayerId);
           return _this.player = brightcoveExp.getModule(brightcove.api.modules.APIModules.VIDEO_PLAYER);
         };
@@ -131,7 +126,6 @@ http://www.opensource.org/licenses/mit-license.php
 
       Video.prototype.hasValidId = function(videoId) {
         var i, idList, len;
-
         idList = this.getPlaylistIds();
         i = 0;
         len = idList.length;
@@ -168,7 +162,6 @@ http://www.opensource.org/licenses/mit-license.php
 
       Video.prototype.initializePlaylist = function() {
         var _this = this;
-
         if (!this.options.showPlaylist) {
           this.el.addClass('noPlaylist');
           this.playlist.remove();
@@ -186,14 +179,12 @@ http://www.opensource.org/licenses/mit-license.php
 
       Video.prototype.initializePlaylistTooltips = function() {
         var playlistOffset, tooltipContainer;
-
         tooltipContainer = $(this.options.tooltipHtml);
         playlistOffset = this.playlist.offset();
         this.el.append(tooltipContainer);
         return this.playlistVideos.on({
           mouseenter: function() {
             var $this, position, videoSummary;
-
             $this = $(this);
             videoSummary = $this.find('.featuredVideoSummary').text();
             position = {
@@ -211,11 +202,9 @@ http://www.opensource.org/licenses/mit-license.php
 
       Video.prototype.getPlaylistIds = function() {
         var arr;
-
         arr = [];
         this.playlistVideos.each(function() {
           var videoId;
-
           videoId = $(this).data('videoId').toString();
           return arr.push(videoId);
         });
@@ -224,7 +213,6 @@ http://www.opensource.org/licenses/mit-license.php
 
       Video.prototype.getDuplicatePlaylistIds = function() {
         var collection, duplicates, i, ids, key, len;
-
         ids = this.getPlaylistIds();
         duplicates = [];
         collection = {};
@@ -245,11 +233,9 @@ http://www.opensource.org/licenses/mit-license.php
 
       Video.prototype.watchHash = function() {
         var _this = this;
-
         if ('onhashchange' in window) {
           return $(window).on('hashchange', function(e) {
             var id;
-
             e.preventDefault();
             id = _this.getIdFromUrl();
             if (id === void 0 || id === _this.hashObject[_this.stateKey]) {
@@ -264,7 +250,6 @@ http://www.opensource.org/licenses/mit-license.php
 
       Video.prototype.getStateFromHash = function() {
         var state, _ref;
-
         this.hashObject = this.getHashObject();
         if (!this.hashObject) {
           return null;
@@ -292,7 +277,6 @@ http://www.opensource.org/licenses/mit-license.php
 
       Video.prototype.getHashObject = function() {
         var arg, args, arr, hash, item, _i, _len;
-
         hash = this.getUrlHash();
         if (!hash) {
           return null;
@@ -313,7 +297,6 @@ http://www.opensource.org/licenses/mit-license.php
 
       Video.prototype.getIdFromUrl = function() {
         var obj, videoId;
-
         obj = this.getHashObject();
         if (obj != null) {
           videoId = obj[this.stateKey];
@@ -328,7 +311,6 @@ http://www.opensource.org/licenses/mit-license.php
 
       Video.prototype.getIdFromQueryString = function() {
         var match;
-
         match = window.location.search.match(new RegExp('[?&]' + 'bctid' + '=([^&]+)(&|$)'));
         return match && decodeURIComponent(match[1].replace(/\+/g, ' '));
       };
@@ -353,7 +335,6 @@ http://www.opensource.org/licenses/mit-license.php
 
       Video.prototype.updateState = function(videoId, playType, e) {
         var eventType, item;
-
         this.activeVideoId = videoId;
         if (this.options.maintainState) {
           this.updateHash(this.activeVideoId);
