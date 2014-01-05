@@ -198,7 +198,7 @@ a:focus {
 }
 
 .featuredVideo {
-  border: 1px solid #444444;
+  border: 1px solid #dedede;
   margin: 0 0 25px;
   padding: 10px 0 10px 10px;
   position: relative;
@@ -228,10 +228,10 @@ a:focus {
 }
 .featuredVideo .featuredVideoPlaylist .featuredVideoPlaylistHeader {
   color: white;
-  background-color: #444444;
-  font-size: 16px;
+  background-color: #666666;
+  font-size: 13px !important;
   font-weight: normal;
-  padding: 3px 8px !important;
+  padding: 4px 8px !important;
   margin: 0 !important;
 }
 .featuredVideo .featuredVideoPlaylist ul {
@@ -247,7 +247,7 @@ a:focus {
   border-left: 6px solid #cccccc;
 }
 .featuredVideo .featuredVideoPlaylist ul li.active {
-  border-left: 6px solid #2ba6cb;
+  border-left: 6px solid #19527f;
 }
 .featuredVideo .featuredVideoPlaylist .featuredVideoTitle {
   font-size: 12px;
